@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/trieloff/helix-index-pipelines/issues"
   },
-  "homepage": "https://github.com/trieloff/helix-index-pipelines#readme"
+  "homepage": "https://github.com/trieloff/helix-index-pipelines#readme",
+  "dependencies": {
+    "@adobe/helix-cli": "^5.3.0"
+  }
 }
