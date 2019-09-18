@@ -67,6 +67,7 @@ async function main(context) {
           ...(full.meta || select.select('section', full).meta),
           title: full.title || select.select('section', full).title,
           value: full.intro || select.select('section', full).intro,
+          image: full.image || select.select('section', full).image,
           sections: select.selectAll('section', full).length
         },
         docs
