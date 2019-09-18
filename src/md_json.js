@@ -23,7 +23,7 @@ function indexnode(root, pattern, props) {
       }
       return retval;
     }, {
-      fragmentId: `${pattern}[${index}]`
+      fragmentID: `${pattern}[${index}]`
     });
   })
 }
