@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/trieloff/helix-index-pipelines#readme",
   "dependencies": {
-    "@adobe/helix-cli": "^5.3.0"
+    "@adobe/helix-cli": "^5.3.0",
+    "mdast-util-to-string": "^1.0.6",
+    "unist-util-select": "^2.0.2"
   }
 }
