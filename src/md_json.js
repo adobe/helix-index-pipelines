@@ -37,39 +37,74 @@ async function main(context) {
   const full = context.content.mdast;
   const docs = [];
 
-  // build an extra index of sections
-  docs.push(...indexnode(full, 'section', {
-    type: ({type}) => type,
-    image: ({image}) => image,
-    value: ({intro}) => intro,
-    title: ({title}) => title,
-    types: ({meta}) => meta.types
-  }));
+  try {
+    // build an extra index of sections
+    docs.push(...indexnode(full, 'section', {
+      type: ({type}) => type,
+      image: ({image}) => image,
+      value: ({intro}) => intro,
+      title: ({title}) => title,
+      types: ({meta}) => meta.types
+    }));
+  } catch (e) {
+    console.error(e);
+  }
 
-  // build an extra index of images linked from text
-  docs.push(...indexnode(full, 'image', {
-    type: 'imageref',
-    image: ({url}) => url,
-    value: ({alt}) => alt,
-    title: ({title}) => title
-  }));
+  try {
+    // build an extra index of images linked from text
+    docs.push(...indexnode(full, 'image', {
+      type: 'imageref',
+      image: ({url}) => url,
+      value: ({alt}) => alt,
+      title: ({title}) => title
+    }));
+  } catch (e) {
+    console.error(e);
+  }
 
-  // build an extra index of full text paragraphs
-  docs.push(...indexnode(full, 'paragraph, heading', {
-    type: 'fulltext',
-    value: (node) => string(node),
-  }));
+  try {
+    // build an extra index of full text paragraphs
+    docs.push(...indexnode(full, 'paragraph, heading', {
+      type: 'fulltext',
+      value: (node) => string(node),
+    }));
+  } catch (e) {
+    console.error(e);
+  }
+
+  const meta = {};
+
+  try {
+    Object.assign(meta, full.meta || select.select('section', full).meta);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    meta.title = full.title || select.select('section', full).title;
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    meta.value = full.intro || select.select('section', full).intro;
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    meta.image = full.image || select.select('section', full).image;
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    meta.sections = select.selectAll('section', full).length;
+  } catch (e) {
+    console.log(e);
+  }
 
   return {
     response: {
       body: {
-        meta: {
-          ...(full.meta || select.select('section', full).meta),
-          title: full.title || select.select('section', full).title,
-          value: full.intro || select.select('section', full).intro,
-          image: full.image || select.select('section', full).image,
-          sections: select.selectAll('section', full).length
-        },
+        meta,
         docs
       },
     },

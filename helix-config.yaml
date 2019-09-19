@@ -13,3 +13,9 @@ strains:
     content: ssh://git@github.com/trieloff/helix-index-pipelines.git#master
     static: ssh://git@github.com/trieloff/helix-index-pipelines.git/htdocs#master
     package: trieloff/github-com--trieloff--helix-index-pipelines--master-dirty
+
+  - name: vision
+    code: ssh://git@github.com/trieloff/helix-index-pipelines.git#azure-images
+    content: ssh://git@github.com/trieloff/helix-index-pipelines.git#master
+    static: ssh://git@github.com/trieloff/helix-index-pipelines.git/htdocs#master
+    package: trieloff/github-com--trieloff--helix-index-pipelines--azure-images-dirty
