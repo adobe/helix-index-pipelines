@@ -12,11 +12,40 @@
 
 /* eslint-env mocha */
 
+const assert = require('assert');
+const fs = require('fs-extra');
+const YAML = require('yaml');
 const { main } = require('../src/html_json');
 
+async function loadConfigFromFile(path) {
+  const source = await fs.readFile(path, 'utf8');
+  const document = YAML.parseDocument(source);
+  return document.toJSON() || {};
+}
+
 describe('HTML Indexing', () => {
-  it('Run main', async () => {
-    const output = await main({}, { request: { params: { path: 'posts/new-to-max.html' } } });
+  it('Find custom faceted attributes', async () => {
+    const config = await loadConfigFromFile('test/index.yaml');
+    const indexname = Object.keys(config.indices)[0];
+    const indexconfig = config.indices[indexname];
+
+    const customAttributes = Object.keys(indexconfig.properties)
+      .filter((name) => indexconfig.properties[name].faceted);
+    const attributesForFacetting = [...customAttributes];
+    assert.deepEqual(attributesForFacetting, ['author']);
+  });
+
+  it('Run html_json', async () => {
+    const output = await main({}, {
+      request: {
+        params: {
+          owner: 'anfibiacreativa',
+          repo: 'helix-norddal',
+          ref: 'master',
+          path: 'posts/new-to-max.html',
+        },
+      },
+    });
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(output, null, 2));
   });

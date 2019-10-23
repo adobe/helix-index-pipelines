@@ -11,15 +11,18 @@ indices:
       author:
         select: .blog-author p a
         value: "{textContent}"
+        faceted: true
       title:
         select: h1:first-of-type
         value: "{textContent}"
+        faceted: true
       date:
         select: ".blog-author p:nth-child(2)"
         value: "{parseTimestamp(\"[POSTED ON] MM-DD-YYYY\")}"
       topics:
         select: .blog-topics.default > ul > li
         value: "{textContent}"
+        faceted: true
       hero:
         select: main > div > img:first-of-type
         value: "{src}"

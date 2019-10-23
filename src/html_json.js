@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 const request = require('request-promise-native');
-const fs = require('fs-extra');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const string = require('mdast-util-to-string');
@@ -25,21 +24,32 @@ const helpers = {
 };
 
 /**
- * Load an index configuration given its path.
+ * Load an index configuration from a git repo.
  *
- * @param {String} path
+ * @param {string} owner
+ * @param {string} repo
+ * @param {string} ref
+ *
+ * @returns configuration
  */
-async function loadConfig(path) {
-  const source = await fs.readFile(path, 'utf8');
-  const document = YAML.parseDocument(source);
-  return document.toJSON() || {};
+async function loadConfig(owner, repo, ref) {
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/helix-index.yaml`;
+  try {
+    const response = await request(url);
+    return YAML.parseDocument(response).toJSON() || {};
+  } catch (e) {
+    // config not usable return empty
+    return {
+      indices: [],
+    };
+  }
 }
 
 /**
  * Return a value in the DOM by evaluating an expression
  *
  * @param {HTMLElement} element
- * @param {String} expression
+ * @param {string} expression
  */
 function getDOMValue(element, expression) {
   const m = expression.match(/{([a-zA-Z]+)(\("([^"]+)"\))?}/);
@@ -98,10 +108,12 @@ function indexGroup(/* document, index */) {
 }
 
 module.exports.main = async (context, action) => {
-  const { path } = action.request.params;
+  const {
+    owner, repo, ref, path,
+  } = action.request.params;
 
   // TODO: this should be loaded once or even passed in context
-  const config = await loadConfig('index.yaml');
+  const config = await loadConfig(owner, repo, ref);
   const docs = [];
 
   await Promise.all(Object.keys(config.indices).map(async (name) => {
@@ -109,11 +121,9 @@ module.exports.main = async (context, action) => {
     if (index.source === 'html') {
       /* Fetch the HTML page */
       const pageUrl = index.fetch.replace(/\{path\}/g, path);
-      const response = await request({
-        url: pageUrl,
-        method: 'GET',
-      });
+      const response = await request(pageUrl);
       const { document } = new JSDOM(response).window;
+
       if (index.group) {
         // create an index record *per* matching element
         docs.push(...indexGroup(document, index));
