@@ -1,0 +1,26 @@
+#
+# index configuration for theblog (hackathon vii)
+#
+version: 1
+
+indices:
+  blog-posts:
+    source: html
+    fetch: https://helix-norddal-anfibiacreativa.project-helix.page/{path}
+    properties:
+      author:
+        select: .blog-author p a
+        value: "{textContent}"
+      title:
+        select: h1:first-of-type
+        value: "{textContent}"
+      date:
+        select: ".blog-author p:nth-child(2)"
+        value: "{parseTimestamp(\"[POSTED ON] MM-DD-YYYY\")}"
+      topics:
+        select: .blog-topics.default > ul > li
+        value: "{textContent}"
+      hero:
+        select: main > div > img:first-of-type
+        value: "{src}"
+      

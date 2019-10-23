@@ -9,23 +9,27 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+/* eslint-disable no-console */
+
 const select = require('unist-util-select');
 const string = require('mdast-util-to-string');
 
 function indexnode(root, pattern, props) {
-  return select.selectAll(pattern, root).map((node, index) => {
-    return Object.keys(props).reduce((retval, propname) => {
+  return select.selectAll(pattern, root)
+    .map((node, index) => Object.keys(props).reduce((retval, propname) => {
       const funcorval = props[propname];
       if (typeof funcorval === 'function') {
+        // eslint-disable-next-line no-param-reassign
         retval[propname] = props[propname](node);
       } else {
+        // eslint-disable-next-line no-param-reassign
         retval[propname] = funcorval;
       }
       return retval;
     }, {
-      fragmentID: `${pattern}[${index}]`
-    });
-  })
+      fragmentID: `${pattern}[${index}]`,
+    }));
 }
 
 /**
@@ -40,11 +44,11 @@ async function main(context) {
   try {
     // build an extra index of sections
     docs.push(...indexnode(full, 'section', {
-      type: ({type}) => type,
-      image: ({image}) => image,
-      value: ({intro}) => intro,
-      title: ({title}) => title,
-      types: ({meta}) => meta.types
+      type: ({ type }) => type,
+      image: ({ image }) => image,
+      value: ({ intro }) => intro,
+      title: ({ title }) => title,
+      types: ({ meta }) => meta.types,
     }));
   } catch (e) {
     console.error(e);
@@ -54,9 +58,9 @@ async function main(context) {
     // build an extra index of images linked from text
     docs.push(...indexnode(full, 'image', {
       type: 'imageref',
-      image: ({url}) => url,
-      value: ({alt}) => alt,
-      title: ({title}) => title
+      image: ({ url }) => url,
+      value: ({ alt }) => alt,
+      title: ({ title }) => title,
     }));
   } catch (e) {
     console.error(e);
@@ -105,7 +109,7 @@ async function main(context) {
     response: {
       body: {
         meta,
-        docs
+        docs,
       },
     },
   };

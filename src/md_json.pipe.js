@@ -45,6 +45,7 @@ function paranoid(context, action) {
 }
 
 const jsonpipe = (cont, context, action) => {
+  // eslint-disable-next-line no-param-reassign
   action.logger = action.logger || log;
   action.logger.log('debug', 'Constructing JSON/Markdown Pipeline');
   const pipe = new Pipeline(action);
