@@ -12,7 +12,7 @@ strains:
     code: ssh://git@github.com/trieloff/helix-index-pipelines.git#master
     content: ssh://git@github.com/trieloff/helix-index-pipelines.git#master
     static: ssh://git@github.com/trieloff/helix-index-pipelines.git/htdocs#master
-    package: helix-pages/a6711bc5f5fffbfd24b3d0a9cb78b2159d5ac434
+    package: helix-pages/helix-index-pipelines
 
   - name: vision
     code: ssh://git@github.com/trieloff/helix-index-pipelines.git#azure-images
