@@ -1,5 +1,66 @@
 {
+  "meta": {
+    "types": [
+      "has-text",
+      "has-inlineCode",
+      "has-heading",
+      "has-link",
+      "nb-text-3",
+      "nb-inlineCode-1",
+      "nb-heading-3",
+      "nb-link-6",
+      "is-link-text-heading",
+      "is-link-text",
+      "is-link"
+    ],
+    "title": "helix-index-pipelines",
+    "value": "Content extraction pipelines for indexing Project Helix websites",
+    "image": "https://img.shields.io/codecov/c/github/adobe/helix-index-pipelines.svg",
+    "sections": 0
+  },
   "docs": [
+    {
+      "fragmentID": "image[0]",
+      "type": "imageref",
+      "image": "https://img.shields.io/codecov/c/github/adobe/helix-index-pipelines.svg",
+      "value": "codecov",
+      "title": null
+    },
+    {
+      "fragmentID": "image[1]",
+      "type": "imageref",
+      "image": "https://img.shields.io/circleci/project/github/adobe/helix-index-pipelines.svg",
+      "value": "CircleCI",
+      "title": null
+    },
+    {
+      "fragmentID": "image[2]",
+      "type": "imageref",
+      "image": "https://img.shields.io/github/license/adobe/helix-index-pipelines.svg",
+      "value": "GitHub license",
+      "title": null
+    },
+    {
+      "fragmentID": "image[3]",
+      "type": "imageref",
+      "image": "https://img.shields.io/github/issues/adobe/helix-index-pipelines.svg",
+      "value": "GitHub issues",
+      "title": null
+    },
+    {
+      "fragmentID": "image[4]",
+      "type": "imageref",
+      "image": "https://img.shields.io/lgtm/grade/javascript/g/adobe/helix-index-pipelines.svg?logo=lgtm&logoWidth=18",
+      "value": "LGTM Code Quality Grade: JavaScript",
+      "title": null
+    },
+    {
+      "fragmentID": "image[5]",
+      "type": "imageref",
+      "image": "https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg",
+      "value": "semantic-release",
+      "title": null
+    },
     {
       "fragmentID": "paragraph, heading[0]",
       "type": "fulltext",
@@ -8,33 +69,27 @@
     {
       "fragmentID": "paragraph, heading[1]",
       "type": "fulltext",
-      "value": "Requires helix-cli"
+      "value": "codecov\nCircleCI\nGitHub license\nGitHub issues\nLGTM Code Quality Grade: JavaScript\nsemantic-release "
     },
     {
       "fragmentID": "paragraph, heading[2]",
       "type": "fulltext",
-      "value": "helix-index-pipelines"
+      "value": "Requires helix-cli"
     },
     {
       "fragmentID": "paragraph, heading[3]",
       "type": "fulltext",
+      "value": "helix-index-pipelines"
+    },
+    {
+      "fragmentID": "paragraph, heading[4]",
+      "type": "fulltext",
+      "value": "Status"
+    },
+    {
+      "fragmentID": "paragraph, heading[5]",
+      "type": "fulltext",
       "value": "Dependencies"
     }
-  ],
-  "meta": {
-    "sections": 0,
-    "title": "helix-index-pipelines",
-    "types": [
-      "has-text",
-      "has-inlineCode",
-      "has-heading",
-      "nb-text-2",
-      "nb-inlineCode-1",
-      "nb-heading-2",
-      "is-text-heading-inlineCode",
-      "is-text-heading",
-      "is-text"
-    ],
-    "value": "Content extraction pipelines for indexing Project Helix websites"
-  }
+  ]
 }
