@@ -136,12 +136,14 @@ class Deploy {
     console.log(chalk`created: {yellow ${this.pkgName}}`);
 
     const deployBundle = async (info) => {
+      const action = await fse.readFile(info.zipFile);
       const actionoptions = {
         name: `${this.pkgName}/${info.name}`,
-        action: await fse.readFile(info.zipFile),
+        action,
         kind: 'nodejs:10',
         annotations: { 'web-export': true },
       };
+      console.log(chalk` {grey upload:} {grey ${path.basename(info.zipFile)}}`);
       await this.ow.actions.update(actionoptions);
       console.log(chalk`created: {yellow ${actionoptions.name}}`);
     };
@@ -222,6 +224,7 @@ class Deploy {
     if (this.links.length > 0) {
       await this.link();
     }
+    console.log(chalk`{green done}`);
   }
 }
 
