@@ -10,8 +10,9 @@
     "lint": "./node_modules/.bin/eslint .",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
-    "deploy": "node ./build/deploy.js",
-    "deploy-ci": "node ./build/deploy.js ci$CIRCLE_BUILD_NUM"
+    "deploy": "node ./build/deploy.js --build --deploy",
+    "deploy-sequences": "node ./build/deploy.js -l major -l minor -l latest",
+    "deploy-ci": "node ./build/deploy.js --build --deploy --pkgVersion ci$CIRCLE_BUILD_NUM -l ci"
   },
   "repository": {
     "type": "git",
@@ -63,7 +64,8 @@
     "nyc": "14.1.1",
     "openwhisk": "3.20.0",
     "semantic-release": "15.13.24",
-    "semver": "6.3.0"
+    "semver": "6.3.0",
+    "yargs": "14.2.0"
   },
   "config": {
     "commitizen": {

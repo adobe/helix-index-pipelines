@@ -16,6 +16,7 @@ const fse = require('fs-extra');
 const PackageCommand = require('@adobe/helix-cli/src/package.cmd');
 const CleanCommand = require('@adobe/helix-cli/src/clean.cmd');
 const openwhisk = require('openwhisk');
+const yargs = require('yargs');
 const glob = require('glob');
 const semver = require('semver');
 const chalk = require('chalk');
@@ -61,6 +62,36 @@ class Deploy {
     return this;
   }
 
+  withPackageName(value) {
+    this.pkgName = value;
+    return this;
+  }
+
+  withDeploy(value) {
+    this.doDeploy = value;
+    return this;
+  }
+
+  withClean(value) {
+    this.doClean = value;
+    return this;
+  }
+
+  withBuild(value) {
+    this.doBuild = value;
+    return this;
+  }
+
+  withLinks(value) {
+    this.links = value;
+    return this;
+  }
+
+  withLinksPackage(value) {
+    this.linksPackage = value;
+    return this;
+  }
+
   async init() {
     this.namespace = process.env.WSK_NAMESPACE || 'helix-index';
     this.ow = openwhisk({
@@ -74,12 +105,9 @@ class Deploy {
     const infos = [...glob.sync(`${this.target}/**/*.info.json`)];
     this.scriptInfos = (await Promise.all(infos.map((info) => fse.readJSON(info))))
       .filter((info) => info.zipFile);
-    if (!this.version) {
-      this.version = pkgJson.version;
-    }
 
     // eslint-disable-next-line no-template-curly-in-string
-    this.pkgName = pkgJson.wsk.package.name.replace('${version}', this.version);
+    this.pkgName = this.pkgName.replace('${version}', this.version);
   }
 
   async clean() {
@@ -123,7 +151,7 @@ class Deploy {
 
   async link() {
     console.log('\nlink\n-------------------------------');
-    const linksPkg = pkgJson.wsk.linksPackage;
+    const linksPkg = this.linksPackage;
     await this.ow.packages.update({
       name: linksPkg,
       package: {
@@ -132,7 +160,7 @@ class Deploy {
     });
     console.log(chalk`created: {yellow ${linksPkg}}`);
 
-    const links = getLinkVersions(['major', 'minor', 'latest'], pkgJson.version);
+    const links = getLinkVersions(this.links, this.version);
     const linkAction = async (info) => {
       const annotations = [{
         key: 'exec',
@@ -181,20 +209,73 @@ class Deploy {
 
   async run() {
     await this.init();
-    await this.clean();
-    await this.package();
-    await this.deploy();
+    if (this.doBuild) {
+      if (this.doClean) {
+        await this.clean();
+      }
+      await this.package();
+    }
+    if (this.doDeploy) {
+      await this.deploy();
+    }
 
-    // do not link for ci
-    if (!this.version.startsWith('ci@')) {
+    if (this.links.length > 0) {
       await this.link();
     }
   }
 }
 
-const version = process.argv[2] || pkgJson.version;
+const argv = yargs()
+  .pkgConf('wsk')
+  .option('pkgVersion', {
+    description: 'Version use in the embedded package.json.',
+    default: pkgJson.version,
+  })
+  .option('package.name', {
+    description: 'OpenWhisk package name.',
+    type: 'string',
+  })
+  .option('version-link', {
+    alias: 'l',
+    description: 'Create symlinks (sequences) after deployment',
+    type: 'string',
+    array: true,
+    choices: ['latest', 'major', 'minor', 'ci'],
+    default: [],
+  })
+  .option('deploy', {
+    alias: 'd',
+    description: 'Automatically deploy to OpenWhisk',
+    type: 'boolean',
+    default: false,
+  })
+  .option('build', {
+    alias: 'b',
+    description: 'Build the deployment package',
+    type: 'boolean',
+    default: false,
+  })
+  .option('clean', {
+    description: 'Clean the dist package',
+    type: 'boolean',
+    default: true,
+  })
+  .option('linkPackage', {
+    description: 'Package name for version links',
+    type: 'string',
+  })
+  .parse(process.argv.slice(2));
 
-new Deploy().withVersion(version).run().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+new Deploy()
+  .withVersion(argv.pkgVersion)
+  .withPackageName(argv.package.name)
+  .withDeploy(argv.deploy)
+  .withClean(argv.clean)
+  .withBuild(argv.build)
+  .withLinks(argv.versionLink)
+  .withLinksPackage(argv.linksPackage)
+  .run()
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
