@@ -1,0 +1,40 @@
+{
+  "docs": [
+    {
+      "fragmentID": "paragraph, heading[0]",
+      "type": "fulltext",
+      "value": "Content extraction pipelines for indexing Project Helix websites"
+    },
+    {
+      "fragmentID": "paragraph, heading[1]",
+      "type": "fulltext",
+      "value": "Requires helix-cli"
+    },
+    {
+      "fragmentID": "paragraph, heading[2]",
+      "type": "fulltext",
+      "value": "helix-index-pipelines"
+    },
+    {
+      "fragmentID": "paragraph, heading[3]",
+      "type": "fulltext",
+      "value": "Dependencies"
+    }
+  ],
+  "meta": {
+    "sections": 0,
+    "title": "helix-index-pipelines",
+    "types": [
+      "has-text",
+      "has-inlineCode",
+      "has-heading",
+      "nb-text-2",
+      "nb-inlineCode-1",
+      "nb-heading-2",
+      "is-text-heading-inlineCode",
+      "is-text-heading",
+      "is-text"
+    ],
+    "value": "Content extraction pipelines for indexing Project Helix websites"
+  }
+}
