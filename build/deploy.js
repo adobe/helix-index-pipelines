@@ -24,6 +24,13 @@ const pkgJson = require('../package.json');
 
 require('dotenv').config();
 
+const log = {
+  debug: console.error,
+  info: console.error,
+  warn: console.error,
+  error: console.error,
+};
+
 function getLinkVersions(links, version) {
   const s = semver.parse(version);
   const sfx = [];
@@ -37,14 +44,14 @@ function getLinkVersions(links, version) {
         break;
       case 'major':
         if (!s) {
-          console.warn(`${chalk.yellow('warn:')} unable to create version sequences. error while parsing version: ${version}`);
+          log.warn(`${chalk.yellow('warn:')} unable to create version sequences. error while parsing version: ${version}`);
           return;
         }
         sfx.push(`v${s.major}`);
         break;
       case 'minor':
         if (!s) {
-          console.warn(`${chalk.yellow('warn:')} unable to create version sequences. error while parsing version: ${version}`);
+          log.warn(`${chalk.yellow('warn:')} unable to create version sequences. error while parsing version: ${version}`);
           return;
         }
         sfx.push(`v${s.major}.${s.minor}`);
@@ -101,24 +108,19 @@ class Deploy {
     });
     this.target = path.resolve(process.cwd(), 'dist');
 
-    // get the list of scripts from the info files
-    const infos = [...glob.sync(`${this.target}/**/*.info.json`)];
-    this.scriptInfos = (await Promise.all(infos.map((info) => fse.readJSON(info))))
-      .filter((info) => info.zipFile);
-
     // eslint-disable-next-line no-template-curly-in-string
     this.pkgName = this.pkgName.replace('${version}', this.version);
   }
 
   async clean() {
-    console.log('clean\n-------------------------------');
-    await new CleanCommand().withTargetDir(this.target)
+    log.info('clean\n-------------------------------');
+    await new CleanCommand(log).withTargetDir(this.target)
       .run();
   }
 
   async package() {
-    console.log('\npackage\n-------------------------------');
-    const cmd = new PackageCommand()
+    log.info('\npackage\n-------------------------------');
+    const cmd = new PackageCommand(log)
       .withOnlyModified(false)
       .withTarget(this.target)
       .withFiles(['src/*.js']);
@@ -126,14 +128,14 @@ class Deploy {
   }
 
   async deploy() {
-    console.log('\ndeploy\n-------------------------------');
+    log.info('\ndeploy\n-------------------------------');
     await this.ow.packages.update({
       name: this.pkgName,
       package: {
         publish: true,
       },
     });
-    console.log(chalk`created: {yellow ${this.pkgName}}`);
+    log.info(chalk`created: {yellow ${this.pkgName}}`);
 
     const deployBundle = async (info) => {
       const action = await fse.readFile(info.zipFile);
@@ -143,16 +145,16 @@ class Deploy {
         kind: 'nodejs:10',
         annotations: { 'web-export': true },
       };
-      console.log(chalk` {grey upload:} {grey ${path.basename(info.zipFile)}}`);
+      log.info(chalk` {grey upload:} {grey ${path.basename(info.zipFile)}}`);
       await this.ow.actions.update(actionoptions);
-      console.log(chalk`created: {yellow ${actionoptions.name}}`);
+      log.info(chalk`created: {yellow ${actionoptions.name}}`);
     };
 
     await Promise.all(this.scriptInfos.map(deployBundle));
   }
 
   async link() {
-    console.log('\nlink\n-------------------------------');
+    log.info('\nlink\n-------------------------------');
     const linksPkg = this.linksPackage;
     await this.ow.packages.update({
       name: linksPkg,
@@ -160,7 +162,7 @@ class Deploy {
         publish: true,
       },
     });
-    console.log(chalk`created: {yellow ${linksPkg}}`);
+    log.info(chalk`created: {yellow ${linksPkg}}`);
 
     const links = getLinkVersions(this.links, this.version);
     const linkAction = async (info) => {
@@ -195,10 +197,10 @@ class Deploy {
 
         try {
           const result = await this.ow.actions.update(options);
-          console.log(chalk`{green 'ok:'} created sequence {yellow /${result.namespace}/${result.name}} -> {yellow ${fqn}}`);
+          log.info(chalk`{green 'ok:'} created sequence {yellow /${result.namespace}/${result.name}} -> {yellow ${fqn}}`);
         } catch (e) {
           hasErrors = true;
-          console.error(chalk`{red 'error:'} failed creating sequence: ${e.message}`);
+          log.error(chalk`{red 'error:'} failed creating sequence: ${e.message}`);
         }
       }));
       if (hasErrors) {
@@ -210,6 +212,7 @@ class Deploy {
   }
 
   async run() {
+    let result = '';
     await this.init();
     if (this.doBuild) {
       if (this.doClean) {
@@ -217,14 +220,30 @@ class Deploy {
       }
       await this.package();
     }
+
+    // get the list of scripts from the info files
+    const infos = [...glob.sync(`${this.target}/**/*.info.json`)];
+    this.scriptInfos = (await Promise.all(infos.map((info) => fse.readJSON(info))))
+      .filter((info) => info.zipFile);
+
+    if (infos.length === 0) {
+      log.info(chalk`{yellow warn:} No bundles to deploy or link.`);
+      return result;
+    }
+
     if (this.doDeploy) {
       await this.deploy();
+      result = JSON.stringify({
+        name: `Release ${this.version}`,
+        url: `/${this.namespace}/${this.pkgName}`,
+      }, null, 2);
     }
 
     if (this.links.length > 0) {
       await this.link();
     }
-    console.log(chalk`{green done}`);
+    log.info(chalk`{green done}`);
+    return result;
   }
 }
 
@@ -278,7 +297,8 @@ new Deploy()
   .withLinks(argv.versionLink)
   .withLinksPackage(argv.linksPackage)
   .run()
+  .then(console.log)
   .catch((error) => {
-    console.error(error);
+    log.error(error);
     process.exit(1);
   });
