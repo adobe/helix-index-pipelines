@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/adobe/helix-index-pipelines/compare/v1.0.0...v1.0.1) (2019-11-13)
+
+
+### Bug Fixes
+
+* **deploy:** improve deployment script ([ded37a7](https://github.com/adobe/helix-index-pipelines/commit/ded37a7f35127071f7ebedf178dbf965583907e3))
+
 # 1.0.0 (2019-11-13)
 
 
