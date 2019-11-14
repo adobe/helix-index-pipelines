@@ -1,6 +1,6 @@
 {
   "name": "helix-index-pipelines",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Content extraction pipelines for indexing Project Helix websites\n",
   "scripts": {
