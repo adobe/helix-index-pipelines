@@ -45,12 +45,12 @@
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.0",
-    "@semantic-release/changelog": "3.0.4",
-    "@semantic-release/exec": "3.3.6",
-    "@semantic-release/git": "7.0.16",
-    "@semantic-release/github": "5.4.3",
+    "@semantic-release/changelog": "3.0.5",
+    "@semantic-release/exec": "3.3.8",
+    "@semantic-release/git": "7.0.18",
+    "@semantic-release/github": "5.5.5",
     "chalk": "3.0.0",
-    "codecov": "3.5.0",
+    "codecov": "3.6.1",
     "commitizen": "4.0.3",
     "cz-conventional-changelog": "3.0.2",
     "dotenv": "8.2.0",
@@ -63,9 +63,9 @@
     "mocha": "6.2.2",
     "nyc": "14.1.1",
     "openwhisk": "3.20.0",
-    "semantic-release": "15.13.24",
+    "semantic-release": "15.13.30",
     "semver": "6.3.0",
-    "yargs": "14.2.0"
+    "yargs": "14.2.1"
   },
   "config": {
     "commitizen": {
