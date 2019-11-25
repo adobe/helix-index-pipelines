@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/adobe/helix-index-pipelines#readme",
   "dependencies": {
-    "@adobe/helix-cli": "6.0.7",
+    "@adobe/helix-cli": "6.1.0",
     "@adobe/helix-pipeline": "6.1.0",
     "jsdom": "15.2.1",
     "mdast-util-to-string": "1.0.7",
