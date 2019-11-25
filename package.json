@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.0",
-    "@semantic-release/changelog": "3.0.5",
+    "@semantic-release/changelog": "3.0.6",
     "@semantic-release/exec": "3.3.8",
     "@semantic-release/git": "7.0.18",
     "@semantic-release/github": "5.5.5",
@@ -54,7 +54,7 @@
     "commitizen": "4.0.3",
     "cz-conventional-changelog": "3.0.2",
     "dotenv": "8.2.0",
-    "eslint": "6.6.0",
+    "eslint": "6.7.0",
     "eslint-plugin-header": "3.0.0",
     "eslint-plugin-import": "2.18.2",
     "fs-extra": "8.1.0",
@@ -65,7 +65,7 @@
     "openwhisk": "3.20.0",
     "semantic-release": "15.13.31",
     "semver": "6.3.0",
-    "yargs": "15.0.1"
+    "yargs": "15.0.2"
   },
   "config": {
     "commitizen": {
