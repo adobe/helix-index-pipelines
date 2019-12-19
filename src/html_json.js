@@ -20,7 +20,7 @@ const fs = require('fs-extra');
 const helpers = {
   string,
   parseTimestamp: (element, format) => {
-    const millis = moment(element.textContent, format).valueOf();
+    const millis = moment.utc(element.textContent, format).valueOf();
     return millis / 1000;
   },
   match: (element, re) => {
