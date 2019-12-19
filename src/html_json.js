@@ -19,11 +19,13 @@ const fs = require('fs-extra');
 
 const helpers = {
   string,
-  parseTimestamp: (element, format) => {
+  parseTimestamp: (element) => (format) => {
     const millis = moment.utc(element.textContent, format).valueOf();
     return millis / 1000;
   },
-  match: (element, re) => {
+  attribute: (element) => (name) => element[name],
+  textContent: (element) => () => element.textContent,
+  match: (element) => (re) => {
     const regex = new RegExp(re, 'g');
     let m;
     let result;
@@ -150,21 +152,16 @@ const repoLoader = {
  * @param {string} expression
  */
 function getDOMValue(element, expression) {
-  const m = expression.match(/{([a-zA-Z]+)(\("([^"]+)"\))?}/);
+  const m = expression.match(/\${([a-zA-Z]+)\(('([^"]+)')?\)}/);
   if (m && m[1]) {
-    const field = element[m[1]];
-    if (typeof field === 'function') {
-      /* This is a instance function on the element */
-      return field.apply(element);
+    const fnName = m[1];
+    const arg = m[3];
+
+    if (helpers[fnName]) {
+      return helpers[fnName](element)(arg);
     }
-    if (!field && helpers[m[1]]) {
-      /* This is a global helper function */
-      return helpers[m[1]](element, m[3]);
-    }
-    /* This is a property of the element */
-    return field;
   }
-  return element.getAttribute(expression);
+  return null;
 }
 
 /**
