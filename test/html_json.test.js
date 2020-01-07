@@ -13,40 +13,60 @@
 /* eslint-env mocha */
 
 const assert = require('assert');
-const fs = require('fs-extra');
-const YAML = require('yaml');
-const { main } = require('../src/html_json');
+const path = require('path');
+const crypto = require('crypto');
+const fse = require('fs-extra');
+const request = require('request-promise-native');
+const UpCommand = require('@adobe/helix-cli/src/up.cmd');
 
-async function loadConfigFromFile(path) {
-  const source = await fs.readFile(path, 'utf8');
-  const document = YAML.parseDocument(source);
-  return document.toJSON() || {};
+async function createTestRoot() {
+  const dir = path.resolve(__dirname, 'tmp', crypto.randomBytes(16).toString('hex'));
+  await fse.ensureDir(dir);
+  return dir;
+}
+
+async function eventPromise(emitter, name) {
+  return new Promise((resolve) => {
+    emitter.on(name, resolve);
+  });
 }
 
 describe('HTML Indexing', () => {
-  it.skip('Find custom faceted attributes', async () => {
-    const config = await loadConfigFromFile('test/specs/index.yaml');
-    const indexname = Object.keys(config.indices)[0];
-    const indexconfig = config.indices[indexname];
+  let testRoot;
 
-    const customAttributes = Object.keys(indexconfig.properties)
-      .filter((name) => indexconfig.properties[name].faceted);
-    const attributesForFacetting = [...customAttributes];
-    assert.deepEqual(attributesForFacetting, ['author']);
+  before(async () => {
+    testRoot = await createTestRoot();
   });
 
-  it.skip('Run html_json', async () => {
-    const output = await main({}, {
-      request: {
-        params: {
-          owner: 'anfibiacreativa',
-          repo: 'helix-norddal',
-          ref: 'master',
-          path: 'posts/new-to-max.html',
-        },
-      },
-    });
-    // eslint-disable-next-line no-console
-    console.log(JSON.stringify(output, null, 2));
+  after(async () => {
+    await fse.remove(testRoot);
   });
+
+  it('Run html_json', async () => {
+    const up = new UpCommand()
+      .withFiles(['src/*.js'])
+      .withLocalRepo(['.'])
+      .withTargetDir(testRoot);
+    const stated = eventPromise(up, 'started');
+    const stopped = eventPromise(up, 'stopped');
+    try {
+      await up.run();
+      await stated;
+
+      const expected = await fse.readJson(path.resolve(__dirname, 'specs', 'blog', 'post_html.json'));
+      const json = await request.get(`http://localhost:${up.project.server.port}/test/specs/blog/post.html.json`, {
+        json: true,
+      });
+      assert.deepEqual(json, expected);
+
+      const expected1 = await fse.readJson(path.resolve(__dirname, 'specs', 'blog', 'post1_html.json'));
+      const json1 = await request.get(`http://localhost:${up.project.server.port}/test/specs/blog/post1.html.json`, {
+        json: true,
+      });
+      assert.deepEqual(json1, expected1);
+    } finally {
+      await up.stop();
+      await stopped;
+    }
+  }).timeout(5000);
 });

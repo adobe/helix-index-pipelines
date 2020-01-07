@@ -12,32 +12,58 @@
 const request = require('request-promise-native');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
+const { dirname, resolve } = require('path');
 const string = require('mdast-util-to-string');
 const YAML = require('yaml');
+const fs = require('fs-extra');
 
 const helpers = {
   string,
-  parseTimestamp: (element, format) => {
-    const millis = moment(element.textContent, format).valueOf();
+  parseTimestamp: (element) => (format) => {
+    const millis = moment.utc(element.textContent, format).valueOf();
     return millis / 1000;
+  },
+  attribute: (element) => (name) => element[name],
+  textContent: (element) => () => element.textContent,
+  match: (element) => (re) => {
+    const regex = new RegExp(re, 'g');
+    let m;
+    let result;
+
+    // eslint-disable-next-line no-cond-assign
+    while ((m = regex.exec(element.textContent)) !== null) {
+      if (!result) {
+        result = m[m.length - 1];
+      } else {
+        if (!Array.isArray(result)) {
+          result = [result];
+        }
+        result.push(m[m.length - 1]);
+      }
+    }
+    return result;
   },
 };
 
 /**
- * Load an index configuration from a git repo.
+ * Load an index configuration from a local file. Its location is given by the path
+ * being requested (e.g. '/test/specs/blog/post.html').
  *
- * @param {string} owner
- * @param {string} repo
- * @param {string} ref
- *
+ * @param {object} params
  * @returns configuration
  */
-async function loadConfig(owner, repo, ref) {
-  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/helix-index.yaml`;
+async function loadConfigFromFile(params) {
+  const { path, logger } = params;
+
+  const configfile = resolve(dirname(__dirname), dirname(path).substr(1), 'helix-index.yaml');
+  logger.debug(`Reading index configuration from: ${configfile}`);
+
   try {
-    const response = await request(url);
-    return YAML.parseDocument(response).toJSON() || {};
+    const source = await fs.readFile(configfile, 'utf8');
+    const document = YAML.parseDocument(source);
+    return document.toJSON() || {};
   } catch (e) {
+    logger.error(`Failed to load index configuration from: ${configfile}`, e);
     // config not usable return empty
     return {
       indices: [],
@@ -46,27 +72,96 @@ async function loadConfig(owner, repo, ref) {
 }
 
 /**
+ * Fetch HTML file from the file system.
+ *
+ * @param {object} params
+ * @return HTML file
+ */
+async function fetchHTMLFromFile(params) {
+  const { path, logger } = params;
+  const htmlfile = resolve(dirname(__dirname), path.replace(/\.md$/, '.html').substr(1));
+  logger.debug(`Reading HTML from: ${htmlfile}`);
+
+  return fs.readFile(htmlfile, 'utf8');
+}
+
+/**
+ * Index loader and HTML fetcher that operates on the local file system.
+ */
+const fileLoader = {
+  loadConfig: loadConfigFromFile,
+  fetchHTML: fetchHTMLFromFile,
+};
+
+/**
+ * Load an index configuration from a git repo.
+ *
+ * @param {object} params
+ * @returns configuration
+ */
+async function loadConfigFromRepo(params) {
+  const {
+    owner, repo, ref, logger,
+  } = params;
+
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/helix-index.yaml`;
+  logger.debug(`Reading index configuration from: ${url}`);
+
+  try {
+    const response = await request(url);
+    return YAML.parseDocument(response).toJSON() || {};
+  } catch (e) {
+    logger.error(`Failed to load index configuration from: ${url}`, e);
+    // config not usable return empty
+    return {
+      indices: [],
+    };
+  }
+}
+
+/**
+ * Fetch HTML page from a remote location, defined by owner, repo and path.
+ *
+ * @param {object} params
+ * @return HTML file
+ */
+async function fetchHTMLFromRepo(params) {
+  const {
+    index, owner, repo, path, logger,
+  } = params;
+  const pageUrl = index.fetch
+    .replace(/\{owner\}/g, owner)
+    .replace(/\{repo\}/g, repo)
+    .replace(/\{path\}/g, path);
+  logger.debug(`Reading HTML from: ${pageUrl}`);
+  return request(pageUrl);
+}
+
+/**
+ * Index loader and HTML fetcher that operates on git repositories.
+ */
+const repoLoader = {
+  loadConfig: loadConfigFromRepo,
+  fetchHTML: fetchHTMLFromRepo,
+};
+
+/**
  * Return a value in the DOM by evaluating an expression
  *
  * @param {HTMLElement} element
  * @param {string} expression
  */
 function getDOMValue(element, expression) {
-  const m = expression.match(/{([a-zA-Z]+)(\("([^"]+)"\))?}/);
+  const m = expression.match(/\${([a-zA-Z]+)\(('([^"]+)')?\)}/);
   if (m && m[1]) {
-    const field = element[m[1]];
-    if (typeof field === 'function') {
-      /* This is a instance function on the element */
-      return field.apply(element);
+    const fnName = m[1];
+    const arg = m[3];
+
+    if (helpers[fnName]) {
+      return helpers[fnName](element)(arg);
     }
-    if (!field && helpers[m[1]]) {
-      /* This is a global helper function */
-      return helpers[m[1]](element, m[3]);
-    }
-    /* This is a property of the element */
-    return field;
   }
-  return element.getAttribute(expression);
+  return null;
 }
 
 /**
@@ -112,16 +207,20 @@ module.exports.main = async (context, action) => {
     owner, repo, ref, path,
   } = action.request.params;
 
-  // TODO: this should be loaded once or even passed in context
-  const config = await loadConfig(owner, repo, ref);
+  // Use a file loader if this is a local setup
+  const loader = (owner === 'helix') ? fileLoader : repoLoader;
   const docs = [];
+  const config = await loader.loadConfig({
+    owner, repo, ref, path, logger: action.logger,
+  });
 
   await Promise.all(Object.keys(config.indices).map(async (name) => {
     const index = config.indices[name];
     if (index.source === 'html') {
       /* Fetch the HTML page */
-      const pageUrl = index.fetch.replace(/\{path\}/g, path);
-      const response = await request(pageUrl);
+      const response = await loader.fetchHTML({
+        index, owner, repo, ref, path, logger: action.logger,
+      });
       const { document } = new JSDOM(response).window;
 
       if (index.group) {
@@ -129,9 +228,7 @@ module.exports.main = async (context, action) => {
         docs.push(...indexGroup(document, index));
       } else {
         // create one index record, potentially with multi-values
-        docs.push({
-          [name]: indexSingle(document, index),
-        });
+        docs.push(indexSingle(document, index));
       }
     }
   }));
