@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/adobe/helix-index-pipelines/compare/v1.0.13...v1.1.0) (2020-01-07)
+
+
+### Features
+
+* **regex:** Add a regex match operator for indexing ([93a2422](https://github.com/adobe/helix-index-pipelines/commit/93a24223ebf977943864576334f8696927271665))
+* **regex:** Add a regex match operator for indexing ([0f46cd7](https://github.com/adobe/helix-index-pipelines/commit/0f46cd79bc51b68613406e043eef02217daedccb))
+* **regex:** Add a regex match operator for indexing ([df3bcd0](https://github.com/adobe/helix-index-pipelines/commit/df3bcd0e7861570bf1db5db664b0ef8f996ca856))
+* **regex:** Add a regex match operator for indexing ([4c499ca](https://github.com/adobe/helix-index-pipelines/commit/4c499ca412eebcec567236db3db94675363a5aa1))
+
 ## [1.0.13](https://github.com/adobe/helix-index-pipelines/compare/v1.0.12...v1.0.13) (2020-01-07)
 
 
