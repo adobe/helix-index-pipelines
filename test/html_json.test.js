@@ -47,11 +47,11 @@ describe('HTML Indexing', () => {
       .withFiles(['src/*.js'])
       .withLocalRepo(['.'])
       .withTargetDir(testRoot);
-    const stated = eventPromise(up, 'started');
+    const started = eventPromise(up, 'started');
     const stopped = eventPromise(up, 'stopped');
     try {
       await up.run();
-      await stated;
+      await started;
 
       const expected = await fse.readJson(path.resolve(__dirname, 'specs', 'blog', 'post_html.json'));
       const json = await request.get(`http://localhost:${up.project.server.port}/test/specs/blog/post.html.json`, {
