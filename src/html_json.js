@@ -13,35 +13,37 @@ const request = require('request-promise-native');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const { dirname, resolve } = require('path');
-const string = require('mdast-util-to-string');
 const YAML = require('yaml');
 const fs = require('fs-extra');
+const jsep = require('jsep');
 
 const helpers = {
-  string,
-  parseTimestamp: (element) => (format) => {
-    const millis = moment.utc(element.textContent, format).valueOf();
+  parseTimestamp: (elements, format) => elements.map((el) => {
+    const millis = moment.utc(el.textContent, format).valueOf();
     return millis / 1000;
-  },
-  attribute: (element) => (name) => element[name],
-  textContent: (element) => () => element.textContent,
-  match: (element) => (re) => {
+  }),
+  attribute: (elements, name) => elements.map((el) => el.getAttribute(name)),
+  textContent: (elements) => elements.map((el) => el.textContent),
+  match: (elements, re) => {
+    // todo: maybe base on function ?
+    const result = [];
     const regex = new RegExp(re, 'g');
-    let m;
-    let result;
+    elements.forEach((el) => {
+      let m;
 
-    // eslint-disable-next-line no-cond-assign
-    while ((m = regex.exec(element.textContent)) !== null) {
-      if (!result) {
-        result = m[m.length - 1];
-      } else {
-        if (!Array.isArray(result)) {
-          result = [result];
-        }
+      // eslint-disable-next-line no-cond-assign
+      while ((m = regex.exec(el.textContent)) !== null) {
         result.push(m[m.length - 1]);
       }
-    }
+    });
     return result;
+  },
+  words: (text, start, end) => {
+    if (Array.isArray(text)) {
+      // eslint-disable-next-line no-param-reassign
+      text = text.join(' ');
+    }
+    return [text.split(/\s+/g).slice(start, end).join(' ')];
   },
 };
 
@@ -145,23 +147,55 @@ const repoLoader = {
   fetchHTML: fetchHTMLFromRepo,
 };
 
+function evaluate(expression, context) {
+  const { logger } = context;
+  const vars = {
+    ...context,
+    ...helpers,
+  };
+
+  function evalNode(node) {
+    switch (node.type) {
+      case 'CallExpression': {
+        const args = node.arguments.map(evalNode);
+        const fn = evalNode(node.callee);
+        if (typeof fn === 'function') {
+          return fn(...args);
+        } else {
+          logger.warn('evaluate function not supported: ', node.callee.name);
+        }
+        return undefined;
+      }
+      case 'Identifier': {
+        return vars[node.name];
+      }
+      case 'Literal': {
+        return node.value;
+      }
+      default: {
+        logger.warn('evaluate type not supported: ', node.type);
+      }
+    }
+    return null;
+  }
+
+  const tree = jsep(expression);
+  // console.log(tree);
+  return evalNode(tree);
+}
+
 /**
  * Return a value in the DOM by evaluating an expression
  *
- * @param {HTMLElement} element
+ * @param {Array.<HTMLElement>} elements
  * @param {string} expression
+ * @param {Logger} logger
  */
-function getDOMValue(element, expression) {
-  const m = expression.match(/\${([a-zA-Z]+)\(('([^"]+)')?\)}/);
-  if (m && m[1]) {
-    const fnName = m[1];
-    const arg = m[3];
-
-    if (helpers[fnName]) {
-      return helpers[fnName](element)(arg);
-    }
-  }
-  return null;
+function getDOMValue(elements, expression, logger) {
+  return evaluate(expression, {
+    el: elements,
+    logger,
+  });
 }
 
 /**
@@ -172,27 +206,25 @@ function getDOMValue(element, expression) {
  *
  * @param {Document} document
  * @param {Object} index
+ * @param {Logger} logger
  */
-function indexSingle(document, index) {
+function indexSingle(document, index, logger) {
   const record = {
     fragmentID: '',
   };
 
   /* Walk through all index properties */
-  Object.keys(index.properties).map((name) => {
-    const { select, value: expression } = index.properties[name];
-    document.querySelectorAll(select).forEach((element) => {
-      const value = getDOMValue(element, expression);
-      if (!record[name]) {
-        record[name] = value;
-      } else {
-        if (!Array.isArray(record[name])) {
-          record[name] = [record[name]];
-        }
-        record[name].push(value);
-      }
-    });
-    return record;
+  Object.keys(index.properties).forEach((name) => {
+    const { select, ...prop } = index.properties[name];
+    const expression = prop.value || prop.values;
+    // create an array of elements
+    const elements = Array.from(document.querySelectorAll(select));
+    let value = getDOMValue(elements, expression, logger) || [];
+    // concat for single value
+    if (prop.value) {
+      value = value.length === 1 ? value[0] : value.join('');
+    }
+    record[name] = value;
   });
   return record;
 }
@@ -206,12 +238,13 @@ module.exports.main = async (context, action) => {
   const {
     owner, repo, ref, path,
   } = action.request.params;
+  const { logger } = action;
 
   // Use a file loader if this is a local setup
   const loader = (owner === 'helix') ? fileLoader : repoLoader;
   const docs = [];
   const config = await loader.loadConfig({
-    owner, repo, ref, path, logger: action.logger,
+    owner, repo, ref, path, logger,
   });
 
   await Promise.all(Object.keys(config.indices).map(async (name) => {
@@ -228,7 +261,7 @@ module.exports.main = async (context, action) => {
         docs.push(...indexGroup(document, index));
       } else {
         // create one index record, potentially with multi-values
-        docs.push(indexSingle(document, index));
+        docs.push(indexSingle(document, index, logger));
       }
     }
   }));
