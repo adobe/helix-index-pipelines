@@ -1,3 +1,51 @@
+# [2.0.0](https://github.com/adobe/helix-index-pipelines/compare/v1.1.0...v2.0.0) (2020-01-09)
+
+
+### Features
+
+* **index:** add support for extracting words for teaser ([e340386](https://github.com/adobe/helix-index-pipelines/commit/e34038680f2f2f54fb437a87d400a6421b3499b0)), closes [#37](https://github.com/adobe/helix-index-pipelines/issues/37)
+
+
+### BREAKING CHANGES
+
+* **index:** new helix-index.yaml format
+
+- the property can be single or multi value, based on the name:
+  `value` creates a single value property,
+  `values` creates an array.
+
+  eg:
+
+  ```
+  properties:
+    title:
+      select: main > .title
+      value: textContent(el)
+    topics:
+      select: main > .topic
+      values: textContent(el)
+  ```
+
+- the `value` or `values` epression is now a proper javascript like
+  expression, using [jesp](http://jsep.from.so/) to parse the tree
+  it supports functions, literals and variables so far. eg:
+
+  ```
+    value: words(textContent(el), 0, 10)
+  ```
+
+- the _variable context_ for the expression evaluation currently
+  contains: `el`, `logger` and all the helper functions:
+  `parseTimestamp`, `attribute`, `textContent`, `match`, `words`.
+
+- the helper functions receive the arguments as specified (no, `element`
+  injection) and need to return an result array.
+
+- the `context.el` is an array containing the results of the
+  `document.querySelectorAll()` of the proprties `select` expression.
+  this allows to build more complext helpers that can operate on
+  multiple elements. like extracting the words from multiple paragraphs.
+
 # [1.1.0](https://github.com/adobe/helix-index-pipelines/compare/v1.0.13...v1.1.0) (2020-01-07)
 
 
