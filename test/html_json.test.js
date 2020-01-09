@@ -46,7 +46,9 @@ describe('HTML Indexing', () => {
     const up = new UpCommand()
       .withFiles(['src/*.js'])
       .withLocalRepo(['.'])
+      .withHttpPort(0)
       .withTargetDir(testRoot);
+
     const started = eventPromise(up, 'started');
     const stopped = eventPromise(up, 'stopped');
     try {
