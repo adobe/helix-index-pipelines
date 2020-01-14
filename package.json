@@ -37,7 +37,7 @@
     "@adobe/helix-pipeline": "6.1.6",
     "fs-extra": "8.1.0",
     "jsdom": "16.0.0",
-    "jsep": "^0.3.4",
+    "jsep": "0.3.4",
     "mdast-util-to-string": "1.0.7",
     "moment": "2.24.0",
     "request": "2.88.0",
