@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/adobe/helix-index-pipelines/compare/v2.0.2...v2.0.3) (2020-01-14)
+
+
+### Bug Fixes
+
+* **deps:** pin dependency jsep to 0.3.4 ([#41](https://github.com/adobe/helix-index-pipelines/issues/41)) ([7f34dc6](https://github.com/adobe/helix-index-pipelines/commit/7f34dc6f6472692c82d76aedf14f9093d6d17105))
+
 ## [2.0.2](https://github.com/adobe/helix-index-pipelines/compare/v2.0.1...v2.0.2) (2020-01-10)
 
 
