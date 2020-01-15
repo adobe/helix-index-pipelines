@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 const request = require('request-promise-native');
+const { StatusCodeError } = require('request-promise-native/errors');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const { dirname, resolve } = require('path');
@@ -251,17 +252,25 @@ module.exports.main = async (context, action) => {
     const index = config.indices[name];
     if (index.source === 'html') {
       /* Fetch the HTML page */
-      const response = await loader.fetchHTML({
-        index, owner, repo, ref, path, logger: action.logger,
-      });
-      const { document } = new JSDOM(response).window;
+      try {
+        const response = await loader.fetchHTML({
+          index, owner, repo, ref, path, logger: action.logger,
+        });
+        const { document } = new JSDOM(response).window;
 
-      if (index.group) {
-        // create an index record *per* matching element
-        docs.push(...indexGroup(document, index));
-      } else {
-        // create one index record, potentially with multi-values
-        docs.push(indexSingle(document, index, logger));
+        if (index.group) {
+          // create an index record *per* matching element
+          docs.push(...indexGroup(document, index));
+        } else {
+          // create one index record, potentially with multi-values
+          docs.push(indexSingle(document, index, logger));
+        }
+      } catch (e) {
+        if (e instanceof StatusCodeError && e.statusCode === 404) {
+          // item not found
+          return;
+        }
+        throw e;
       }
     }
   }));
