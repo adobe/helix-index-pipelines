@@ -1,3 +1,10 @@
+## [2.0.12](https://github.com/adobe/helix-index-pipelines/compare/v2.0.11...v2.0.12) (2020-01-16)
+
+
+### Bug Fixes
+
+* **html_json:** indexing a inexistent item should not throw an internal server error ([#53](https://github.com/adobe/helix-index-pipelines/issues/53)) ([b4b0640](https://github.com/adobe/helix-index-pipelines/commit/b4b0640c5e11968b90e1285d5bf824ffbf351430))
+
 ## [2.0.11](https://github.com/adobe/helix-index-pipelines/compare/v2.0.10...v2.0.11) (2020-01-15)
 
 
