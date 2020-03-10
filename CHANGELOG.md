@@ -1,3 +1,10 @@
+## [2.0.71](https://github.com/adobe/helix-index-pipelines/compare/v2.0.70...v2.0.71) (2020-03-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-pipeline to v6.7.2 ([62a4035](https://github.com/adobe/helix-index-pipelines/commit/62a4035ed7833bfdb83024d2c61f3a9607604434))
+
 ## [2.0.70](https://github.com/adobe/helix-index-pipelines/compare/v2.0.69...v2.0.70) (2020-03-10)
 
 
