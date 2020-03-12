@@ -13,9 +13,7 @@ const request = require('request-promise-native');
 const { StatusCodeError } = require('request-promise-native/errors');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
-const { dirname, resolve } = require('path');
 const YAML = require('yaml');
-const fs = require('fs-extra');
 const jsep = require('jsep');
 
 const helpers = {
@@ -49,65 +47,17 @@ const helpers = {
 };
 
 /**
- * Load an index configuration from a local file. Its location is given by the path
- * being requested (e.g. '/test/specs/blog/post.html').
- *
- * @param {object} params
- * @returns configuration
- */
-async function loadConfigFromFile(params) {
-  const { path, logger } = params;
-
-  const configfile = resolve(dirname(__dirname), dirname(path).substr(1), 'helix-index.yaml');
-  logger.debug(`Reading index configuration from: ${configfile}`);
-
-  try {
-    const source = await fs.readFile(configfile, 'utf8');
-    const document = YAML.parseDocument(source);
-    return document.toJSON() || {};
-  } catch (e) {
-    logger.error(`Failed to load index configuration from: ${configfile}`, e);
-    // config not usable return empty
-    return {
-      indices: [],
-    };
-  }
-}
-
-/**
- * Fetch HTML file from the file system.
- *
- * @param {object} params
- * @return HTML file
- */
-async function fetchHTMLFromFile(params) {
-  const { path, logger } = params;
-  const htmlfile = resolve(dirname(__dirname), path.replace(/\.md$/, '.html').substr(1));
-  logger.debug(`Reading HTML from: ${htmlfile}`);
-
-  return fs.readFile(htmlfile, 'utf8');
-}
-
-/**
- * Index loader and HTML fetcher that operates on the local file system.
- */
-const fileLoader = {
-  loadConfig: loadConfigFromFile,
-  fetchHTML: fetchHTMLFromFile,
-};
-
-/**
  * Load an index configuration from a git repo.
  *
  * @param {object} params
  * @returns configuration
  */
-async function loadConfigFromRepo(params) {
+async function loadConfig(params) {
   const {
     owner, repo, ref, logger,
   } = params;
 
-  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/helix-index.yaml`;
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/helix-query.yaml`;
   logger.debug(`Reading index configuration from: ${url}`);
 
   try {
@@ -128,7 +78,7 @@ async function loadConfigFromRepo(params) {
  * @param {object} params
  * @return HTML file
  */
-async function fetchHTMLFromRepo(params) {
+async function fetchHTML(params) {
   const {
     index, owner, repo, path, logger,
   } = params;
@@ -139,14 +89,6 @@ async function fetchHTMLFromRepo(params) {
   logger.debug(`Reading HTML from: ${pageUrl}`);
   return request(pageUrl);
 }
-
-/**
- * Index loader and HTML fetcher that operates on git repositories.
- */
-const repoLoader = {
-  loadConfig: loadConfigFromRepo,
-  fetchHTML: fetchHTMLFromRepo,
-};
 
 function evaluate(expression, context) {
   const { logger } = context;
@@ -241,10 +183,8 @@ module.exports.main = async (context, action) => {
   } = action.request.params;
   const { logger } = action;
 
-  // Use a file loader if this is a local setup
-  const loader = (owner === 'helix') ? fileLoader : repoLoader;
   const docs = [];
-  const config = await loader.loadConfig({
+  const config = await loadConfig({
     owner, repo, ref, path, logger,
   });
 
@@ -253,7 +193,7 @@ module.exports.main = async (context, action) => {
     if (index.source === 'html') {
       /* Fetch the HTML page */
       try {
-        const response = await loader.fetchHTML({
+        const response = await fetchHTML({
           index, owner, repo, ref, path, logger: action.logger,
         });
         const { document } = new JSDOM(response).window;
