@@ -13,21 +13,24 @@
 /* eslint-env mocha */
 
 const assert = require('assert');
-const path = require('path');
+const nock = require('nock');
+const { basename, resolve } = require('path');
 const crypto = require('crypto');
 const fse = require('fs-extra');
 const request = require('request-promise-native');
 const UpCommand = require('@adobe/helix-cli/src/up.cmd');
 
+const specsDir = resolve(__dirname, 'specs');
+
 async function createTestRoot() {
-  const dir = path.resolve(__dirname, 'tmp', crypto.randomBytes(16).toString('hex'));
+  const dir = resolve(__dirname, 'tmp', crypto.randomBytes(16).toString('hex'));
   await fse.ensureDir(dir);
   return dir;
 }
 
 async function eventPromise(emitter, name) {
-  return new Promise((resolve) => {
-    emitter.on(name, resolve);
+  return new Promise((r) => {
+    emitter.on(name, r);
   });
 }
 
@@ -36,6 +39,17 @@ describe('HTML Indexing', () => {
 
   before(async () => {
     testRoot = await createTestRoot();
+    nock('https://raw.githubusercontent.com/')
+      .get(/\/helix\/github.com--adobe--helix-index-pipelines\/[^/]+\/helix-query.yaml/)
+      .replyWithFile(200, resolve(specsDir, 'blog', 'helix-query.yaml'))
+      .persist();
+    nock('https://github.com--adobe--helix-index-pipelines-helix.project-helix.page')
+      .get((uri) => uri.startsWith('//test/specs/blog'))
+      .reply(200, (uri) => {
+        const path = resolve(specsDir, 'blog', basename(uri).replace(/\.md$/, '.html'));
+        return fse.readFile(path, 'utf-8');
+      })
+      .persist();
   });
 
   after(async () => {
@@ -55,13 +69,13 @@ describe('HTML Indexing', () => {
       await up.run();
       await started;
 
-      const expected = await fse.readJson(path.resolve(__dirname, 'specs', 'blog', 'post_html.json'));
+      const expected = await fse.readJson(resolve(specsDir, 'blog', 'post_html.json'));
       const json = await request.get(`http://localhost:${up.project.server.port}/test/specs/blog/post.html.json`, {
         json: true,
       });
       assert.deepEqual(json, expected);
 
-      const expected1 = await fse.readJson(path.resolve(__dirname, 'specs', 'blog', 'post1_html.json'));
+      const expected1 = await fse.readJson(resolve(specsDir, 'blog', 'post1_html.json'));
       const json1 = await request.get(`http://localhost:${up.project.server.port}/test/specs/blog/post1.html.json`, {
         json: true,
       });
