@@ -1,3 +1,10 @@
+## [2.0.78](https://github.com/adobe/helix-index-pipelines/compare/v2.0.77...v2.0.78) (2020-03-17)
+
+
+### Bug Fixes
+
+* **html:** use helix-query.yaml instead of helix-index.yaml ([#125](https://github.com/adobe/helix-index-pipelines/issues/125)) ([4e95a29](https://github.com/adobe/helix-index-pipelines/commit/4e95a29850a6b487202996290559a589560a75bc))
+
 ## [2.0.77](https://github.com/adobe/helix-index-pipelines/compare/v2.0.76...v2.0.77) (2020-03-17)
 
 
