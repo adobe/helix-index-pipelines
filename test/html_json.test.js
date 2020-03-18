@@ -39,8 +39,8 @@ describe('HTML Indexing', () => {
 
   before(async () => {
     testRoot = await createTestRoot();
-    nock('https://raw.githubusercontent.com/')
-      .get(/\/helix\/github.com--adobe--helix-index-pipelines\/[^/]+\/helix-query.yaml/)
+    nock('https://raw.githubusercontent.com')
+      .get(/\/helix\/github.com--adobe--helix-index-pipelines\/.*\/helix-query.yaml/)
       .replyWithFile(200, resolve(specsDir, 'blog', 'helix-query.yaml'))
       .persist();
     nock('https://github.com--adobe--helix-index-pipelines-helix.project-helix.page')
