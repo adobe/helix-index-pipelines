@@ -13,8 +13,8 @@ const request = require('request-promise-native');
 const { StatusCodeError } = require('request-promise-native/errors');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
-const YAML = require('yaml');
 const jsep = require('jsep');
+const { IndexConfig } = require('@adobe/helix-shared');
 
 const helpers = {
   parseTimestamp: (elements, format) => elements.map((el) => {
@@ -45,32 +45,6 @@ const helpers = {
     return [text.split(/\s+/g).slice(start, end).join(' ')];
   },
 };
-
-/**
- * Load an index configuration from a git repo.
- *
- * @param {object} params
- * @returns configuration
- */
-async function loadConfig(params) {
-  const {
-    owner, repo, ref, logger,
-  } = params;
-
-  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/helix-query.yaml`;
-  logger.debug(`Reading index configuration from: ${url}`);
-
-  try {
-    const response = await request(url);
-    return YAML.parseDocument(response).toJSON() || {};
-  } catch (e) {
-    logger.error(`Failed to load index configuration from: ${url}`, e);
-    // config not usable return empty
-    return {
-      indices: [],
-    };
-  }
-}
 
 /**
  * Fetch HTML page from a remote location, defined by owner, repo and path.
@@ -181,12 +155,26 @@ module.exports.main = async (context, action) => {
   const {
     owner, repo, ref, path,
   } = action.request.params;
+
   const { logger } = action;
 
+  const loadConfig = async () => {
+    const indexYAML = await action.downloader.fetchGithub({
+      owner, repo, ref, path: '/helix-query.yaml',
+    });
+    if (indexYAML.status !== 200) {
+      logger.warn(`Unable to fetch helix-query.yaml: ${indexYAML.status}`);
+      return {
+        indices: [],
+      };
+    }
+    return (await new IndexConfig()
+      .withSource(indexYAML.body)
+      .init()).toJSON();
+  };
+
+  const config = await loadConfig();
   const docs = [];
-  const config = await loadConfig({
-    owner, repo, ref, path, logger,
-  });
 
   await Promise.all(Object.keys(config.indices).map(async (name) => {
     const index = config.indices[name];

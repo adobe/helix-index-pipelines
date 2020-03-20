@@ -39,12 +39,8 @@ describe('HTML Indexing', () => {
 
   before(async () => {
     testRoot = await createTestRoot();
-    nock('https://raw.githubusercontent.com')
-      .get(/\/helix\/github.com--adobe--helix-index-pipelines\/.*\/helix-query.yaml/)
-      .replyWithFile(200, resolve(specsDir, 'blog', 'helix-query.yaml'))
-      .persist();
     nock('https://github.com--adobe--helix-index-pipelines-helix.project-helix.page')
-      .get((uri) => uri.startsWith('//test/specs/blog'))
+      .get((uri) => uri.startsWith('/test/specs/blog'))
       .reply(200, (uri) => {
         const path = resolve(specsDir, 'blog', basename(uri).replace(/\.md$/, '.html'));
         return fse.readFile(path, 'utf-8');
@@ -84,5 +80,5 @@ describe('HTML Indexing', () => {
       await up.stop();
       await stopped;
     }
-  }).timeout(5000);
+  }).timeout(10000);
 });
