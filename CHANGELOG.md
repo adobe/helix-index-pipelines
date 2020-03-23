@@ -1,3 +1,10 @@
+## [2.0.86](https://github.com/adobe/helix-index-pipelines/compare/v2.0.85...v2.0.86) (2020-03-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency fs-extra to v9 ([426ae20](https://github.com/adobe/helix-index-pipelines/commit/426ae20c73ed08f7108fcc1ceb41dd878425f758))
+
 ## [2.0.85](https://github.com/adobe/helix-index-pipelines/compare/v2.0.84...v2.0.85) (2020-03-23)
 
 
