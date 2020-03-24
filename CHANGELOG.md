@@ -1,3 +1,10 @@
+## [2.0.92](https://github.com/adobe/helix-index-pipelines/compare/v2.0.91...v2.0.92) (2020-03-24)
+
+
+### Bug Fixes
+
+* **html:** HTML pipeline should use downloader ([da7bd64](https://github.com/adobe/helix-index-pipelines/commit/da7bd64113d4c5b828856bb2ab5b77c94c9b182e)), closes [#138](https://github.com/adobe/helix-index-pipelines/issues/138)
+
 ## [2.0.91](https://github.com/adobe/helix-index-pipelines/compare/v2.0.90...v2.0.91) (2020-03-24)
 
 
