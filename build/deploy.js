@@ -15,6 +15,8 @@ const path = require('path');
 const fse = require('fs-extra');
 const PackageCommand = require('@adobe/helix-cli/src/package.cmd');
 const CleanCommand = require('@adobe/helix-cli/src/clean.cmd');
+const dotenv = require('dotenv');
+const os = require('os');
 const openwhisk = require('openwhisk');
 const yargs = require('yargs');
 const glob = require('glob');
@@ -100,10 +102,15 @@ class Deploy {
   }
 
   async init() {
-    this.namespace = process.env.WSK_NAMESPACE || 'helix-index';
+    const wskPropsFile = process.env.WSK_CONFIG_FILE || path.resolve(os.homedir(), '.wskprops');
+    let wskProps = {};
+    if (await fse.pathExists(wskPropsFile)) {
+      wskProps = dotenv.parse(await fse.readFile(wskPropsFile));
+    }
+    this.namespace = process.env.WSK_NAMESPACE || wskProps.NAMESPACE || 'helix-index';
     this.ow = openwhisk({
-      apihost: process.env.WSK_HOST || 'adobeioruntime.net',
-      api_key: process.env.WSK_AUTH,
+      apihost: process.env.WSK_HOST || wskProps.APIHOST || 'adobeioruntime.net',
+      api_key: process.env.WSK_AUTH || wskProps.AUTH,
       namespace: this.namespace,
     });
     this.target = path.resolve(process.cwd(), 'dist');
