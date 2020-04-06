@@ -1,3 +1,10 @@
+## [2.0.104](https://github.com/adobe/helix-index-pipelines/compare/v2.0.103...v2.0.104) (2020-04-06)
+
+
+### Bug Fixes
+
+* **deploy:** use WSK_CONFIG_FILE ([#160](https://github.com/adobe/helix-index-pipelines/issues/160)) ([4a66c6a](https://github.com/adobe/helix-index-pipelines/commit/4a66c6a5ce42499b7211c816ecabd0ae68cc9cee))
+
 ## [2.0.103](https://github.com/adobe/helix-index-pipelines/compare/v2.0.102...v2.0.103) (2020-04-06)
 
 
