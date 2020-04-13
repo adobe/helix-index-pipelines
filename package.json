@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/adobe/helix-index-pipelines#readme",
   "dependencies": {
-    "@adobe/helix-cli": "8.1.12",
+    "@adobe/helix-cli": "8.1.13",
     "@adobe/helix-pipeline": "6.12.4",
     "@adobe/helix-shared": "6.0.5",
     "fs-extra": "9.0.0",
