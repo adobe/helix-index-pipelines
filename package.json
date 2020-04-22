@@ -35,7 +35,7 @@
   "dependencies": {
     "@adobe/helix-cli": "9.1.1",
     "@adobe/helix-pipeline": "6.13.1",
-    "@adobe/helix-shared": "7.0.1",
+    "@adobe/helix-shared": "7.1.0",
     "fs-extra": "9.0.0",
     "jsdom": "16.2.2",
     "jsep": "0.3.4",
