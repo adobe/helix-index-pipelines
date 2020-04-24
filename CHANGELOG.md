@@ -1,3 +1,10 @@
+## [2.0.123](https://github.com/adobe/helix-index-pipelines/compare/v2.0.122...v2.0.123) (2020-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.2.0 ([22204ff](https://github.com/adobe/helix-index-pipelines/commit/22204ff5c83c960e2740ea9c316a564eaeadf00e))
+
 ## [2.0.122](https://github.com/adobe/helix-index-pipelines/compare/v2.0.121...v2.0.122) (2020-04-22)
 
 
