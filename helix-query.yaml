@@ -43,3 +43,7 @@ indices:
         select: meta[name="x-source-hash"]
         value: |
           attribute(el, 'content')
+      external-path:
+        select: none
+        value: |
+          replace(path, '/test/specs/', '/')

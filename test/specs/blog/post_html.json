@@ -13,7 +13,8 @@
                 "Topic 2",
                 "Topic 3"
             ],
-            "hero": "Image"
+            "hero": "Image",
+            "external-path": "/blog/post.md"
         }
     ]
 }

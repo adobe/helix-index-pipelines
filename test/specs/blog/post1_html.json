@@ -17,7 +17,8 @@
                 "Product 2",
                 "Product 3"
             ],
-            "hero": "Image"
+            "hero": "Image",
+            "external-path": "/blog/post1.md"
         }
     ]
 }
