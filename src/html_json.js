@@ -44,6 +44,7 @@ const helpers = {
     }
     return [text.split(/\s+/g).slice(start, end).join(' ')];
   },
+  replace: (s, searchValue, replaceValue) => [s.replace(searchValue, replaceValue)],
 };
 
 /**
@@ -108,10 +109,11 @@ function evaluate(expression, context) {
  * @param {string} expression
  * @param {Logger} logger
  */
-function getDOMValue(elements, expression, logger) {
+function getDOMValue(elements, expression, logger, vars) {
   return evaluate(expression, {
     el: elements,
     logger,
+    ...vars,
   });
 }
 
@@ -125,7 +127,7 @@ function getDOMValue(elements, expression, logger) {
  * @param {Object} index
  * @param {Logger} logger
  */
-function indexSingle(document, index, logger) {
+function indexSingle(path, document, index, logger) {
   const record = {
     fragmentID: '',
   };
@@ -135,8 +137,8 @@ function indexSingle(document, index, logger) {
     const { select, ...prop } = index.properties[name];
     const expression = prop.value || prop.values;
     // create an array of elements
-    const elements = Array.from(document.querySelectorAll(select));
-    let value = getDOMValue(elements, expression, logger) || [];
+    const elements = select !== 'none' ? Array.from(document.querySelectorAll(select)) : [];
+    let value = getDOMValue(elements, expression, logger, { path }) || [];
     // concat for single value
     if (prop.value) {
       value = value.length === 1 ? value[0] : value.join('');
@@ -146,7 +148,7 @@ function indexSingle(document, index, logger) {
   return record;
 }
 
-function indexGroup(/* document, index */) {
+function indexGroup(/* path, document, index */) {
   // TODO
   return [];
 }
@@ -188,10 +190,10 @@ module.exports.main = async (context, action) => {
 
         if (index.group) {
           // create an index record *per* matching element
-          docs.push(...indexGroup(document, index));
+          docs.push(...indexGroup(path, document, index));
         } else {
           // create one index record, potentially with multi-values
-          docs.push(indexSingle(document, index, logger));
+          docs.push(indexSingle(path, document, index, logger));
         }
       } catch (e) {
         if (e instanceof StatusCodeError && e.statusCode === 404) {
