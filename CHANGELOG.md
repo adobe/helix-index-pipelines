@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/adobe/helix-index-pipelines/compare/v2.0.129...v2.1.0) (2020-05-06)
+
+
+### Features
+
+* **html_json:** support for computed properties ([#200](https://github.com/adobe/helix-index-pipelines/issues/200)) ([42df9ae](https://github.com/adobe/helix-index-pipelines/commit/42df9aea2f7648e85638e96d836efe224eca391d))
+
 ## [2.0.129](https://github.com/adobe/helix-index-pipelines/compare/v2.0.128...v2.0.129) (2020-04-29)
 
 
