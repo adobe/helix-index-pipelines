@@ -1,3 +1,10 @@
+## [2.1.15](https://github.com/adobe/helix-index-pipelines/compare/v2.1.14...v2.1.15) (2020-05-19)
+
+
+### Bug Fixes
+
+* **deps:** update [@adobe](https://github.com/adobe) ([e48f22b](https://github.com/adobe/helix-index-pipelines/commit/e48f22b5afdb803942ad40e75af0ac180463144e))
+
 ## [2.1.14](https://github.com/adobe/helix-index-pipelines/compare/v2.1.13...v2.1.14) (2020-05-18)
 
 
