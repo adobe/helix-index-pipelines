@@ -9,8 +9,8 @@
       "nb-inlineCode-1",
       "nb-heading-3",
       "nb-link-6",
-      "is-link-text-heading",
-      "is-link-text",
+      "is-link-heading-text",
+      "is-link-heading",
       "is-link"
     ],
     "title": "helix-index-pipelines",
