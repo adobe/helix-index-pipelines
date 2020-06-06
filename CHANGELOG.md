@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/adobe/helix-index-pipelines/compare/v2.1.27...v3.0.0) (2020-06-06)
+
+
+### Bug Fixes
+
+* **html:** add innerHTML ([#235](https://github.com/adobe/helix-index-pipelines/issues/235)) ([052442c](https://github.com/adobe/helix-index-pipelines/commit/052442cc665c8eda2c1b3e57bc54894dc15efd8c))
+
+
+### BREAKING CHANGES
+
+* **html:** docs array returned has a key for every index defintion
+
 ## [2.1.27](https://github.com/adobe/helix-index-pipelines/compare/v2.1.26...v2.1.27) (2020-06-05)
 
 
