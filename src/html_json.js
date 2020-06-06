@@ -23,6 +23,7 @@ const helpers = {
   }),
   attribute: (elements, name) => elements.map((el) => el.getAttribute(name)),
   textContent: (elements) => elements.map((el) => el.textContent),
+  innerHTML: (elements) => elements.map((el) => el.innerHTML),
   match: (elements, re) => {
     // todo: maybe base on function ?
     const result = [];
@@ -48,21 +49,57 @@ const helpers = {
 };
 
 /**
- * Fetch HTML page from a remote location, defined by owner, repo and path.
+ * Fetch all HTML sources for all indices configured, ensuring that the
+ * HTML source is fetched at most once.
  *
- * @param {object} params
- * @return HTML file
+ * @param {object} params parameters
+ * @param {object} indices index configurations
+ * @returns object containing index definition and HTML response, keyed by name
  */
-async function fetchHTML(params) {
+async function fetchHTML(params, indices) {
   const {
-    index, owner, repo, path, logger,
+    owner, repo, path, logger,
   } = params;
-  const pageUrl = index.fetch
-    .replace(/\{owner\}/g, owner)
-    .replace(/\{repo\}/g, repo)
-    .replace(/\{path\}/g, path);
-  logger.debug(`Reading HTML from: ${pageUrl}`);
-  return request(pageUrl);
+
+  // Create our result where we'll store the HTML responses
+  const result = Object.entries(indices)
+    .filter(([, { source }]) => source === 'html')
+    .reduce((prev, [name, index]) => {
+      // eslint-disable-next-line no-param-reassign
+      prev[name] = {
+        index,
+        pageURL: index.fetch.replace(/\{owner\}/g, owner).replace(/\{repo\}/g, repo).replace(/\{path\}/g, path),
+      };
+      return prev;
+    }, {});
+
+  // Create a unique set of the page URLs found
+  const pageURLs = Array.from(Object.values(result)
+    .reduce((prev, { pageURL }) => {
+      prev.add(pageURL);
+      return prev;
+    }, new Set()));
+
+  // Fetch the responses
+  const responses = new Map(await Promise.all(pageURLs.map(async (pageURL) => {
+    logger.info(`Reading HTML from: ${pageURL}`);
+    try {
+      const response = await request(pageURL);
+      return [pageURL, response];
+    } catch (e) {
+      if (!(e instanceof StatusCodeError && e.statusCode === 404)) {
+        logger.error(`Unexpected error fetching ${pageURL}`, e);
+      }
+      return [pageURL, null];
+    }
+  })));
+
+  // Finish by filling in all responses acquired
+  Object.values(result).forEach((entry) => {
+    // eslint-disable-next-line no-param-reassign
+    entry.response = responses.get(entry.pageURL);
+  });
+  return result;
 }
 
 function evaluate(expression, context) {
@@ -178,32 +215,22 @@ module.exports.main = async (context, action) => {
   const config = await loadConfig();
   const docs = [];
 
-  await Promise.all(Object.keys(config.indices).map(async (name) => {
-    const index = config.indices[name];
-    if (index.source === 'html') {
-      /* Fetch the HTML page */
-      try {
-        const response = await fetchHTML({
-          index, owner, repo, ref, path, logger: action.logger,
-        });
-        const { document } = new JSDOM(response).window;
+  const htmlIndices = await fetchHTML({
+    owner, repo, ref, path, logger: action.logger,
+  }, config.indices);
 
-        if (index.group) {
-          // create an index record *per* matching element
-          docs.push(...indexGroup(path, document, index));
-        } else {
-          // create one index record, potentially with multi-values
-          docs.push(indexSingle(path, document, index, logger));
-        }
-      } catch (e) {
-        if (e instanceof StatusCodeError && e.statusCode === 404) {
-          // item not found
-          return;
-        }
-        throw e;
+  Object.entries(htmlIndices)
+    .filter(([, { response }]) => response !== null)
+    .forEach(([name, { index, response }]) => {
+      const { document } = new JSDOM(response).window;
+      if (index.group) {
+        docs.push(...indexGroup(path, document, index));
+      } else {
+        docs.push({
+          [name]: indexSingle(path, document, index, logger),
+        });
       }
-    }
-  }));
+    });
   return {
     response: {
       body: {
