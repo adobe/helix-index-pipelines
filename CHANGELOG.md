@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/adobe/helix-index-pipelines/compare/v3.0.2...v3.0.3) (2020-06-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-cli to v10.2.1 ([5f19d7f](https://github.com/adobe/helix-index-pipelines/commit/5f19d7f310166695f849c582ac96fd6f1636cc2d))
+
 ## [3.0.2](https://github.com/adobe/helix-index-pipelines/compare/v3.0.1...v3.0.2) (2020-06-08)
 
 
