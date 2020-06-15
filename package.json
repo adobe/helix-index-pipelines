@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/adobe/helix-index-pipelines#readme",
   "dependencies": {
-    "@adobe/helix-cli": "10.2.4",
+    "@adobe/helix-cli": "10.2.5",
     "@adobe/helix-pipeline": "10.0.0",
     "@adobe/helix-shared": "7.6.0",
     "fs-extra": "9.0.1",
@@ -47,7 +47,7 @@
     "yaml": "1.10.0"
   },
   "devDependencies": {
-    "@adobe/eslint-config-helix": "1.1.1",
+    "@adobe/eslint-config-helix": "1.1.2",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/exec": "5.0.0",
     "@semantic-release/git": "9.0.0",
