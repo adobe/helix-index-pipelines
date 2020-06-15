@@ -62,7 +62,7 @@
     "eslint-plugin-import": "2.21.1",
     "glob": "7.1.6",
     "junit-report-builder": "2.0.0",
-    "mocha": "7.2.0",
+    "mocha": "8.0.1",
     "nock": "12.0.3",
     "nyc": "15.1.0",
     "openwhisk": "3.21.2",
