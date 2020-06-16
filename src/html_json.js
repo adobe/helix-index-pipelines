@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 const request = require('request-promise-native');
-const { StatusCodeError } = require('request-promise-native/errors');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
@@ -58,7 +57,7 @@ const helpers = {
  */
 async function fetchHTML(params, indices) {
   const {
-    owner, repo, path, logger,
+    owner, repo, path, log,
   } = params;
 
   // Create our result where we'll store the HTML responses
@@ -68,42 +67,50 @@ async function fetchHTML(params, indices) {
       // eslint-disable-next-line no-param-reassign
       prev[name] = {
         index,
-        pageURL: index.fetch.replace(/\{owner\}/g, owner).replace(/\{repo\}/g, repo).replace(/\{path\}/g, path),
+        url: index.fetch.replace(/\{owner\}/g, owner).replace(/\{repo\}/g, repo).replace(/\{path\}/g, path),
       };
       return prev;
     }, {});
 
   // Create a unique set of the page URLs found
-  const pageURLs = Array.from(Object.values(result)
-    .reduce((prev, { pageURL }) => {
-      prev.add(pageURL);
+  const urls = Array.from(Object.values(result)
+    .reduce((prev, { url }) => {
+      prev.add(url);
       return prev;
     }, new Set()));
 
   // Fetch the responses
-  const responses = new Map(await Promise.all(pageURLs.map(async (pageURL) => {
-    logger.info(`Reading HTML from: ${pageURL}`);
-    try {
-      const response = await request(pageURL);
-      return [pageURL, response];
-    } catch (e) {
-      if (!(e instanceof StatusCodeError && e.statusCode === 404)) {
-        logger.error(`Unexpected error fetching ${pageURL}`, e);
-      }
-      return [pageURL, null];
-    }
+  const results = new Map(await Promise.all(urls.map(async (url) => {
+    log.info(`Reading HTML from: ${url}`);
+
+    return request({ url, headers: { 'User-Agent': 'index-pipelines/html_json' } })
+      .then((response) => ([url, { response }]))
+      .catch((e) => {
+        if (typeof e === 'object' && e.name === 'StatusCodeError') {
+          // ugly type of error sent by request-promise-native:
+          // - shorten message to not include the whole response body
+          // - create a proper Error
+          const message = e.message.length < 100 ? e.message : `${e.message.substr(0, 100)}...`;
+          log.error(`Error fetching ${url}: statusCode: ${e.statusCode}, message: '${message}'`);
+          return [url, { error: { reason: message, status: e.statusCode } }];
+        } else {
+          const { message } = e;
+          log.error(`Error fetching ${url}:`, e);
+          return [url, { error: { reason: message } }];
+        }
+      });
   })));
 
   // Finish by filling in all responses acquired
   Object.values(result).forEach((entry) => {
     // eslint-disable-next-line no-param-reassign
-    entry.response = responses.get(entry.pageURL);
+    entry.result = results.get(entry.url);
   });
   return result;
 }
 
 function evaluate(expression, context) {
-  const { logger } = context;
+  const { log } = context;
   const vars = {
     ...context,
     ...helpers,
@@ -117,7 +124,7 @@ function evaluate(expression, context) {
         if (typeof fn === 'function') {
           return fn(...args);
         } else {
-          logger.warn('evaluate function not supported: ', node.callee.name);
+          log.warn('evaluate function not supported: ', node.callee.name);
         }
         return undefined;
       }
@@ -128,7 +135,7 @@ function evaluate(expression, context) {
         return node.value;
       }
       default: {
-        logger.warn('evaluate type not supported: ', node.type);
+        log.warn('evaluate type not supported: ', node.type);
       }
     }
     return null;
@@ -144,12 +151,12 @@ function evaluate(expression, context) {
  *
  * @param {Array.<HTMLElement>} elements
  * @param {string} expression
- * @param {Logger} logger
+ * @param {Logger} log
  */
-function getDOMValue(elements, expression, logger, vars) {
+function getDOMValue(elements, expression, log, vars) {
   return evaluate(expression, {
     el: elements,
-    logger,
+    log,
     ...vars,
   });
 }
@@ -162,9 +169,9 @@ function getDOMValue(elements, expression, logger, vars) {
  *
  * @param {Document} document
  * @param {Object} index
- * @param {Logger} logger
+ * @param {Logger} log
  */
-function indexSingle(path, document, index, logger) {
+function indexSingle(path, document, index, log) {
   const record = {
     fragmentID: '',
   };
@@ -175,7 +182,7 @@ function indexSingle(path, document, index, logger) {
     const expression = prop.value || prop.values;
     // create an array of elements
     const elements = select !== 'none' ? Array.from(document.querySelectorAll(select)) : [];
-    let value = getDOMValue(elements, expression, logger, { path }) || [];
+    let value = getDOMValue(elements, expression, log, { path }) || [];
     // concat for single value
     if (prop.value) {
       value = value.length === 1 ? value[0] : value.join('');
@@ -190,19 +197,30 @@ function indexGroup(/* path, document, index */) {
   return [];
 }
 
+function evaluateHtml(response, path, index, log) {
+  const docs = [];
+  const { document } = new JSDOM(response).window;
+  if (index.group) {
+    docs.push(...indexGroup(path, document, index));
+  } else {
+    docs.push(indexSingle(path, document, index, log));
+  }
+  return docs;
+}
+
 module.exports.main = async (context, action) => {
   const {
     owner, repo, ref, path,
   } = action.request.params;
 
-  const { logger } = action;
+  const { logger: log } = action;
 
   const loadConfig = async () => {
     const indexYAML = await action.downloader.fetchGithub({
       owner, repo, ref, path: '/helix-query.yaml',
     });
     if (indexYAML.status !== 200) {
-      logger.warn(`Unable to fetch helix-query.yaml: ${indexYAML.status}`);
+      log.warn(`Unable to fetch helix-query.yaml: ${indexYAML.status}`);
       return {
         indices: [],
       };
@@ -213,29 +231,25 @@ module.exports.main = async (context, action) => {
   };
 
   const config = await loadConfig();
-  const docs = [];
 
-  const htmlIndices = await fetchHTML({
-    owner, repo, ref, path, logger: action.logger,
-  }, config.indices);
+  try {
+    const htmlIndices = await fetchHTML({
+      owner, repo, ref, path, log: action.logger,
+    }, config.indices);
 
-  Object.entries(htmlIndices)
-    .filter(([, { response }]) => response !== null)
-    .forEach(([name, { index, response }]) => {
-      const { document } = new JSDOM(response).window;
-      if (index.group) {
-        docs.push(...indexGroup(path, document, index));
-      } else {
-        docs.push({
-          [name]: indexSingle(path, document, index, logger),
-        });
-      }
-    });
-  return {
-    response: {
-      body: {
-        docs,
-      },
-    },
-  };
+    const body = {};
+    Object.entries(htmlIndices)
+      .reduce((prev, [name, { index, result: { error, response } }]) => {
+        if (error) {
+          body[name] = { error };
+        } else {
+          body[name] = { docs: evaluateHtml(response, path, index, log) };
+        }
+        return body;
+      }, body);
+    return { response: { body } };
+  } catch (e) {
+    log.error(`An error occurred: ${e.message}`, e);
+    return { status: 500, body: e.message };
+  }
 };

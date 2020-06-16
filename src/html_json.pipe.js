@@ -25,7 +25,6 @@ const timing = require('@adobe/helix-pipeline/src/utils/timing');
 const jsonpipe = (cont, context, action) => {
   // eslint-disable-next-line no-param-reassign
   action.logger = action.logger || log;
-  action.logger.log('debug', 'Constructing JSON Pipeline');
   const pipe = new Pipeline(action);
   const timer = timing();
   pipe
@@ -38,8 +37,6 @@ const jsonpipe = (cont, context, action) => {
     .use(timer.report)
     .error(dump.report)
     .error(selectStatus(production()));
-
-  action.logger.log('debug', 'Running JSON pipeline');
   return pipe.run(context);
 };
 
