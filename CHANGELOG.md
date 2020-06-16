@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/adobe/helix-index-pipelines/compare/v3.0.14...v3.1.0) (2020-06-16)
+
+
+### Features
+
+* return an entry per index definition ([#258](https://github.com/adobe/helix-index-pipelines/issues/258)) ([25bbd1a](https://github.com/adobe/helix-index-pipelines/commit/25bbd1a4693395df1be55c093b705f049c731bde))
+
 ## [3.0.14](https://github.com/adobe/helix-index-pipelines/compare/v3.0.13...v3.0.14) (2020-06-16)
 
 
