@@ -30,7 +30,6 @@ module.exports.main = async (context, action) => {
     },
   });
 
-
   if (!context.response) {
     context.response = {};
   }
