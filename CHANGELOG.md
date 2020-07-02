@@ -1,3 +1,10 @@
+## [3.1.28](https://github.com/adobe/helix-index-pipelines/compare/v3.1.27...v3.1.28) (2020-07-02)
+
+
+### Bug Fixes
+
+* **deps:** update minor ([8bbb574](https://github.com/adobe/helix-index-pipelines/commit/8bbb5747c92f0ad1446087a03b39d626004de009))
+
 ## [3.1.27](https://github.com/adobe/helix-index-pipelines/compare/v3.1.26...v3.1.27) (2020-07-02)
 
 
