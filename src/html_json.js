@@ -9,11 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-const request = require('request-promise-native');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
+const fetchAPI = require('@adobe/helix-fetch');
+
+const fetchContext = process.env.HELIX_FETCH_FORCE_HTTP1
+  ? fetchAPI.context({
+    httpProtocols: ['http1'],
+    httpsProtocols: ['http1'],
+  })
+  : fetchAPI;
+const { fetch } = fetchContext;
 
 const helpers = {
   parseTimestamp: (elements, format) => elements.map((el) => {
@@ -83,22 +91,29 @@ async function fetchHTML(params, indices) {
   const results = new Map(await Promise.all(urls.map(async (url) => {
     log.info(`Reading HTML from: ${url}`);
 
-    return request({ url, headers: { 'User-Agent': 'index-pipelines/html_json' } })
-      .then((response) => ([url, { response }]))
-      .catch((e) => {
-        if (typeof e === 'object' && e.name === 'StatusCodeError') {
-          // ugly type of error sent by request-promise-native:
-          // - shorten message to not include the whole response body
-          // - create a proper Error
-          const message = e.message.length < 100 ? e.message : `${e.message.substr(0, 100)}...`;
-          log.error(`Error fetching ${url}: statusCode: ${e.statusCode}, message: '${message}'`);
-          return [url, { error: { reason: message, status: e.statusCode } }];
-        } else {
-          const { message } = e;
-          log.error(`Error fetching ${url}:`, e);
-          return [url, { error: { reason: message } }];
-        }
+    let ret;
+    let body;
+    try {
+      ret = await fetch(url, {
+        headers: {
+          'User-Agent': 'index-pipelines/html_json',
+        },
+        cache: 'no-store',
       });
+      body = await ret.text();
+    } catch (e) {
+      ret = {
+        ok: false,
+        status: 500,
+      };
+      body = e.message;
+    }
+    if (!ret.ok) {
+      const message = body < 100 ? body : `${body.substr(0, 100)}...`;
+      log.error(`Error fetching ${url}: statusCode: ${ret.status}, message: '${message}'`);
+      return [url, { error: { reason: message, status: ret.status } }];
+    }
+    return [url, { response: body }];
   })));
 
   // Finish by filling in all responses acquired
@@ -208,35 +223,20 @@ function evaluateHtml(response, path, index, log) {
   return docs;
 }
 
-module.exports.main = async (context, action) => {
+async function indexHtml(params) {
   const {
     owner, repo, ref, path,
-  } = action.request.params;
+    __ow_logger: log,
+  } = params;
 
-  const { logger: log } = action;
-
-  const loadConfig = async () => {
-    const indexYAML = await action.downloader.fetchGithub({
-      owner, repo, ref, path: '/helix-query.yaml',
-    });
-    if (indexYAML.status !== 200) {
-      log.warn(`Unable to fetch helix-query.yaml: ${indexYAML.status}`);
-      return {
-        indices: [],
-      };
-    }
-    return (await new IndexConfig()
-      .withSource(indexYAML.body)
-      .init()).toJSON();
-  };
-
-  const config = await loadConfig();
+  const config = (await new IndexConfig()
+    .withRepo(owner, repo, ref)
+    .init()).toJSON();
 
   try {
     const htmlIndices = await fetchHTML({
-      owner, repo, ref, path, log: action.logger,
+      owner, repo, ref, path, log,
     }, config.indices);
-
     const body = {};
     Object.entries(htmlIndices)
       .reduce((prev, [name, { index, result: { error, response } }]) => {
@@ -247,9 +247,15 @@ module.exports.main = async (context, action) => {
         }
         return body;
       }, body);
-    return { response: { body } };
+    return {
+      status: 200,
+      'content-type': 'application/json',
+      body,
+    };
   } catch (e) {
     log.error(`An error occurred: ${e.message}`, e);
     return { status: 500, body: e.message };
   }
-};
+}
+
+module.exports = indexHtml;

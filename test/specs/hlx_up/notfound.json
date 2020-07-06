@@ -1,0 +1,18 @@
+{
+  "body": {
+    "blog-posts": {
+      "error": {
+        "reason": "*",
+        "status": 500
+      }
+    },
+    "blog-posts-flat": {
+      "error": {
+        "reason": "*",
+        "status": 500
+      }
+    }
+  },
+  "content-type": "application/json",
+  "status": 200
+}
