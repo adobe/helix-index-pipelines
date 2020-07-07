@@ -1,3 +1,10 @@
+## [3.1.32](https://github.com/adobe/helix-index-pipelines/compare/v3.1.31...v3.1.32) (2020-07-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-pipeline to v10.1.1 ([#300](https://github.com/adobe/helix-index-pipelines/issues/300)) ([8bae855](https://github.com/adobe/helix-index-pipelines/commit/8bae85554d68d338a583d9c8710f47ed2bfd9d59))
+
 ## [3.1.31](https://github.com/adobe/helix-index-pipelines/compare/v3.1.30...v3.1.31) (2020-07-03)
 
 
