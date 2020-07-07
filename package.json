@@ -1,5 +1,5 @@
 {
-  "name": "helix-index-pipelines",
+  "name": "@adobe/helix-index-pipelines",
   "version": "3.2.0",
   "private": true,
   "description": "Content extraction pipelines for indexing Project Helix websites\n",
