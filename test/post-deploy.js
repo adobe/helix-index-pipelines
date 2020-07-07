@@ -76,14 +76,18 @@ describe('Post-Deploy Tests', () => {
       params: {
         owner: 'adobe',
         repo: 'helix-index-pipelines',
-        // source hash is currently computed based on the `ref` of the content, which is not very
-        // stable. so we request a ref to begin with....
-        ref: '10e2f2b84e29465fc87143f4d848f03a9f3eac52',
+        ref: 'master',
         path: '/test/specs/example-post.html',
       },
     });
+
+    // source hash is currently computed based on the `ref` of the content, which is not very
+    // stable. so we just mask it here
+    ret.response.result.body['blog-posts'].docs[0].sourceHash = 'xxx';
+    ret.response.result.body['blog-posts-flat'].docs[0].sourceHash = 'xxx';
+
     assert.deepEqual(ret.response.result, expected);
-  }).timeout(20000);
+  }).timeout(30000);
 
   it('Service returns a 404 for unknown resource', async () => {
     const ow = openwhisk(wskOpts);
