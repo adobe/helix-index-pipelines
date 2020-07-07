@@ -82,4 +82,38 @@ describe('Post-Deploy Tests', () => {
     });
     assert.deepEqual(ret.response.result, expected);
   }).timeout(20000);
+
+  it('Service returns a 404 for unknown resource', async () => {
+    const ow = openwhisk(wskOpts);
+    const ret = await ow.actions.invoke({
+      namespace,
+      actionName,
+      blocking: true,
+      result: false,
+      params: {
+        owner: 'adobe',
+        repo: 'helix-index-pipelines',
+        ref: 'master',
+        path: '/notfound.html',
+      },
+    });
+    assert.deepEqual(ret.response.result, {
+      body: {
+        'blog-posts': {
+          error: {
+            reason: '<!doctype html>\n<html lang="en">\n  <head>\n    <title>Resource not found</title>\n    <!-- Required me...',
+            status: 404,
+          },
+        },
+        'blog-posts-flat': {
+          error: {
+            reason: '<!doctype html>\n<html lang="en">\n  <head>\n    <title>Resource not found</title>\n    <!-- Required me...',
+            status: 404,
+          },
+        },
+      },
+      'content-type': 'application/json',
+      status: 200,
+    });
+  }).timeout(20000);
 });
