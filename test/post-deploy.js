@@ -76,7 +76,9 @@ describe('Post-Deploy Tests', () => {
       params: {
         owner: 'adobe',
         repo: 'helix-index-pipelines',
-        ref: 'master',
+        // source hash is currently computed based on the `ref` of the content, which is not very
+        // stable. so we request a ref to begin with....
+        ref: '10e2f2b84e29465fc87143f4d848f03a9f3eac52',
         path: '/test/specs/example-post.html',
       },
     });
