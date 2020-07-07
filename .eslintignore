@@ -1,4 +1,3 @@
-.vscode/*
+.*
 coverage/*
-.hlx
-dist
+dist/*

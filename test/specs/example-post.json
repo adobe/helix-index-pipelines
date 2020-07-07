@@ -1,0 +1,47 @@
+{
+  "body": {
+    "blog-posts": {
+      "docs": [
+        {
+          "author": "Russell Brady",
+          "date": 1592438400,
+          "external-path": "/example-post.html",
+          "fragmentID": "",
+          "hero": "",
+          "products": [
+            "Acrobat DC",
+            "After Effects",
+            "Photoshop",
+            "Illustrator",
+            "Creative Cloud"
+          ],
+          "sourceHash": "Ye1JWeO1AKl7rJ85",
+          "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
+          "title": "Scottish Digital Agency Brings Pot-Load of Views to Rainbow “Thank You” Campaign",
+          "topics": [
+            "Creative Inspiration & Trends",
+            "Design"
+          ]
+        }
+      ]
+    },
+    "blog-posts-flat": {
+      "docs": [
+        {
+          "author": "by Russell Brady",
+          "date": "\n<p>by Russell Brady</p>\n<p>posted on 06-18-2020</p>\n",
+          "external-path": "/example-post.html",
+          "fragmentID": "",
+          "hero": "",
+          "products": "Products: Acrobat DC, After Effects, Photoshop, Illustrator, Creative Cloud",
+          "sourceHash": "Ye1JWeO1AKl7rJ85",
+          "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
+          "title": "Scottish Digital Agency Brings Pot-Load of Views to Rainbow “Thank You” Campaign",
+          "topics": "Topics: Creative Inspiration &amp; Trends, Design"
+        }
+      ]
+    }
+  },
+  "content-type": "application/json",
+  "status": 200
+}
