@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/adobe/helix-index-pipelines/compare/v3.1.32...v3.2.0) (2020-07-07)
+
+
+### Features
+
+* convert to normal service action ([#299](https://github.com/adobe/helix-index-pipelines/issues/299)) ([8cf4675](https://github.com/adobe/helix-index-pipelines/commit/8cf46750b91582d41b4345ac57434dc1a61bc27b)), closes [#298](https://github.com/adobe/helix-index-pipelines/issues/298)
+
 ## [3.1.32](https://github.com/adobe/helix-index-pipelines/compare/v3.1.31...v3.1.32) (2020-07-07)
 
 
