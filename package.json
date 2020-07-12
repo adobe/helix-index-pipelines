@@ -36,7 +36,7 @@
     "@adobe/helix-status": "8.1.0",
     "@adobe/openwhisk-action-logger": "2.2.0",
     "@adobe/openwhisk-action-utils": "4.2.3",
-    "jsdom": "16.2.2",
+    "jsdom": "16.3.0",
     "jsep": "0.3.4",
     "mdast-util-to-string": "1.1.0",
     "moment": "2.27.0",
