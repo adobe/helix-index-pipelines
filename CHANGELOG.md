@@ -1,3 +1,10 @@
+## [3.2.10](https://github.com/adobe/helix-index-pipelines/compare/v3.2.9...v3.2.10) (2020-08-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-epsagon to v1.4.0 ([#329](https://github.com/adobe/helix-index-pipelines/issues/329)) ([6abbee8](https://github.com/adobe/helix-index-pipelines/commit/6abbee8516dd23d1fe33ccdf0456e070fbbc2a8f))
+
 ## [3.2.9](https://github.com/adobe/helix-index-pipelines/compare/v3.2.8...v3.2.9) (2020-08-11)
 
 
