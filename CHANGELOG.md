@@ -1,3 +1,10 @@
+## [3.2.14](https://github.com/adobe/helix-index-pipelines/compare/v3.2.13...v3.2.14) (2020-09-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-utils to v4.3.0 ([#335](https://github.com/adobe/helix-index-pipelines/issues/335)) ([c7ed9fd](https://github.com/adobe/helix-index-pipelines/commit/c7ed9fd902d9d18578034bd3d800edff27c97ae2))
+
 ## [3.2.13](https://github.com/adobe/helix-index-pipelines/compare/v3.2.12...v3.2.13) (2020-09-03)
 
 
