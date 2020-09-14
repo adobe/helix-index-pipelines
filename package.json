@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/adobe/helix-index-pipelines#readme",
   "dependencies": {
-    "@adobe/helix-epsagon": "1.5.1",
+    "@adobe/helix-epsagon": "1.5.2",
     "@adobe/helix-fetch": "1.9.1",
     "@adobe/helix-shared": "7.13.0",
     "@adobe/helix-status": "8.1.3",
