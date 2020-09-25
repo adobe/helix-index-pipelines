@@ -110,7 +110,7 @@ async function fetchHTML(params, indices) {
     }
     if (!ret.ok) {
       const message = body < 100 ? body : `${body.substr(0, 100)}...`;
-      log.error(`Error fetching ${url}: statusCode: ${ret.status}, message: '${message}'`);
+      log.warn(`Fetching ${url} failed: statusCode: ${ret.status}, message: '${message}'`);
       return [url, { error: { reason: message, status: ret.status } }];
     }
     return [url, { response: body }];
