@@ -1,3 +1,10 @@
+## [3.2.20](https://github.com/adobe/helix-index-pipelines/compare/v3.2.19...v3.2.20) (2020-09-25)
+
+
+### Bug Fixes
+
+* a missing document (404) shouldn't log an error ([#345](https://github.com/adobe/helix-index-pipelines/issues/345)) ([a8d1ddf](https://github.com/adobe/helix-index-pipelines/commit/a8d1ddff2b679962e48eb3a51c6afa9de91225f2))
+
 ## [3.2.19](https://github.com/adobe/helix-index-pipelines/compare/v3.2.18...v3.2.19) (2020-09-21)
 
 
