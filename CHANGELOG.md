@@ -1,3 +1,10 @@
+## [3.2.21](https://github.com/adobe/helix-index-pipelines/compare/v3.2.20...v3.2.21) (2020-09-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependency moment to v2.29.0 ([#346](https://github.com/adobe/helix-index-pipelines/issues/346)) ([0d4ee89](https://github.com/adobe/helix-index-pipelines/commit/0d4ee8945ac6945d64ed40219524110c67e04bec))
+
 ## [3.2.20](https://github.com/adobe/helix-index-pipelines/compare/v3.2.19...v3.2.20) (2020-09-25)
 
 
