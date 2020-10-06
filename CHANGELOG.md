@@ -1,3 +1,10 @@
+## [3.2.26](https://github.com/adobe/helix-index-pipelines/compare/v3.2.25...v3.2.26) (2020-10-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.16.0 ([#352](https://github.com/adobe/helix-index-pipelines/issues/352)) ([c38ca18](https://github.com/adobe/helix-index-pipelines/commit/c38ca18189e63e41e901d0034c5c29a249e24236))
+
 ## [3.2.25](https://github.com/adobe/helix-index-pipelines/compare/v3.2.24...v3.2.25) (2020-10-03)
 
 
