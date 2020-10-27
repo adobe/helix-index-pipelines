@@ -24,7 +24,7 @@ const SPEC_ROOT = p.resolve(__dirname, 'specs');
 
 describe('HTML Indexing with hlx up', () => {
   before(async () => {
-    nock('https://helix-index-pipelines-adobe.project-helix.page')
+    nock('https://main--helix-index-pipelines--adobe.project-helix.page')
       .get((uri) => uri.startsWith('/test/specs/hlx_up'))
       .reply(200, (uri) => {
         const path = p.resolve(SPEC_ROOT, 'hlx_up', p.basename(uri).replace(/\.md$/, '.html'));
