@@ -65,7 +65,7 @@ const helpers = {
  */
 async function fetchHTML(params, indices) {
   const {
-    owner, repo, path, log,
+    owner, repo, ref, path, log,
   } = params;
 
   // Create our result where we'll store the HTML responses
@@ -75,7 +75,11 @@ async function fetchHTML(params, indices) {
       // eslint-disable-next-line no-param-reassign
       prev[name] = {
         index,
-        url: index.fetch.replace(/\{owner\}/g, owner).replace(/\{repo\}/g, repo).replace(/\{path\}/g, path),
+        url: index.fetch
+          .replace(/\{owner\}/g, owner)
+          .replace(/\{repo\}/g, repo)
+          .replace(/\{ref\}/g, ref)
+          .replace(/\{path\}/g, path),
       };
       return prev;
     }, {});
