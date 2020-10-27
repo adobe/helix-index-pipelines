@@ -24,6 +24,7 @@ describe('Post-Deploy Tests', () => {
   let wskOpts = {};
   let actionName;
   let { version } = pkgJson;
+  let branch = 'main';
 
   before(() => {
     wskOpts = {
@@ -32,6 +33,7 @@ describe('Post-Deploy Tests', () => {
     };
     if (process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
       version = `ci${process.env.CIRCLE_BUILD_NUM}`;
+      branch = process.env.CIRCLE_BRANCH;
     }
     // eslint-disable-next-line no-template-curly-in-string
     actionName = pkgJson.wsk.name.replace('${version}', version);
@@ -76,7 +78,7 @@ describe('Post-Deploy Tests', () => {
       params: {
         owner: 'adobe',
         repo: 'helix-index-pipelines',
-        ref: 'main',
+        ref: branch,
         path: '/test/specs/example-post.html',
       },
     });
@@ -99,7 +101,7 @@ describe('Post-Deploy Tests', () => {
       params: {
         owner: 'adobe',
         repo: 'helix-index-pipelines',
-        ref: 'main',
+        ref: branch,
         path: '/notfound.html',
       },
     });
