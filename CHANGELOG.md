@@ -1,3 +1,10 @@
+## [3.2.28](https://github.com/adobe/helix-index-pipelines/compare/v3.2.27...v3.2.28) (2020-10-27)
+
+
+### Bug Fixes
+
+* post-deploy currently fails because it looks for master branch ([#358](https://github.com/adobe/helix-index-pipelines/issues/358)) ([d3479f8](https://github.com/adobe/helix-index-pipelines/commit/d3479f86c12f107a052bd641aff32144c19d4e4d))
+
 ## [3.2.27](https://github.com/adobe/helix-index-pipelines/compare/v3.2.26...v3.2.27) (2020-10-12)
 
 
