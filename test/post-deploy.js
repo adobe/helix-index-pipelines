@@ -30,7 +30,7 @@ describe('Post-Deploy Tests', () => {
       api_key: process.env.WSK_AUTH,
       apihost: process.env.WSK_APIHOST || 'https://adobeioruntime.net',
     };
-    if (process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'master') {
+    if (process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
       version = `ci${process.env.CIRCLE_BUILD_NUM}`;
     }
     // eslint-disable-next-line no-template-curly-in-string
@@ -76,7 +76,7 @@ describe('Post-Deploy Tests', () => {
       params: {
         owner: 'adobe',
         repo: 'helix-index-pipelines',
-        ref: 'master',
+        ref: 'main',
         path: '/test/specs/example-post.html',
       },
     });
@@ -99,7 +99,7 @@ describe('Post-Deploy Tests', () => {
       params: {
         owner: 'adobe',
         repo: 'helix-index-pipelines',
-        ref: 'master',
+        ref: 'main',
         path: '/notfound.html',
       },
     });

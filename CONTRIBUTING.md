@@ -35,13 +35,13 @@ In your pull request, outline:
 * If (and what) they breaks
 * Start the pull request with the GitHub issue ID, e.g. #123
 
-Lastly, please follow the [pull request template](https://github.com/adobe/helix-cli/blob/master/.github/pull_request_template.md) when submitting a pull request!
+Lastly, please follow the [pull request template](https://github.com/adobe/helix-cli/blob/main/.github/pull_request_template.md) when submitting a pull request!
 
 ## Commit message format
 
-We use [semantic-release](https://github.com/semantic-release/semantic-release) for release management and require that all commits are properly formatted using the [Angular Commit Message Conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines)
+We use [semantic-release](https://github.com/semantic-release/semantic-release) for release management and require that all commits are properly formatted using the [Angular Commit Message Conventions](https://github.com/angular/angular.js/blob/main/DEVELOPERS.md#-git-commit-guidelines)
 
-In order to help you craft a good commit message, we added [commitizen](https://www.npmjs.com/package/commitizen) as dev dependency, so you can just run 
+In order to help you craft a good commit message, we added [commitizen](https://www.npmjs.com/package/commitizen) as dev dependency, so you can just run
 
 ```
 $ npm run commit

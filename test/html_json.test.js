@@ -38,7 +38,7 @@ describe('HTML Indexing with hlx up', () => {
     const json = await indexHtml({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
-      ref: 'master',
+      ref: 'main',
       path: '/test/specs/hlx_up/post.html',
       __ow_logger: console,
     });
@@ -50,7 +50,7 @@ describe('HTML Indexing with hlx up', () => {
     const json = await indexHtml({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
-      ref: 'master',
+      ref: 'main',
       path: '/test/specs/hlx_up/post1.html',
       __ow_logger: console,
     });
@@ -62,7 +62,7 @@ describe('HTML Indexing with hlx up', () => {
     const json = await indexHtml({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
-      ref: 'master',
+      ref: 'main',
       path: '/test/specs/hlx_up/notfound.html',
       __ow_logger: console,
     });

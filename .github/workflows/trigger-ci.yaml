@@ -1,7 +1,7 @@
 on:
   push:
     branches-ignore:
-      - 'master'
+      - 'main'
 
 jobs:
   ci_trigger:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Trigger
         id: trigger
-        uses: adobe-rnd/github-touch-action@master
+        uses: adobe-rnd/github-touch-action@main
         with:
           repo-token: ${{ secrets.MY_GITHUB_TOKEN }}
           user: renovate-bot
