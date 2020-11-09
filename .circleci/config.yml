@@ -73,7 +73,6 @@ jobs:
           statuspage_group: Publishing
           action_package: helix-observation
           newrelic_group_policy: Publishing Repeated Failure
-          incubator: true # remove only when promoting service to production
 
   branch-deploy:
     executor: node10
