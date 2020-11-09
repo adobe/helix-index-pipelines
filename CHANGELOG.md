@@ -1,3 +1,10 @@
+## [3.2.30](https://github.com/adobe/helix-index-pipelines/compare/v3.2.29...v3.2.30) (2020-11-09)
+
+
+### Bug Fixes
+
+* **monitoring:** wrong statuspage component name ([a866771](https://github.com/adobe/helix-index-pipelines/commit/a8667715a043134246b504f32b68d84d5bd4337d))
+
 ## [3.2.29](https://github.com/adobe/helix-index-pipelines/compare/v3.2.28...v3.2.29) (2020-11-09)
 
 
