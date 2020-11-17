@@ -1,3 +1,10 @@
+## [3.2.32](https://github.com/adobe/helix-index-pipelines/compare/v3.2.31...v3.2.32) (2020-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency mdast-util-to-string to v2 ([#366](https://github.com/adobe/helix-index-pipelines/issues/366)) ([ae8ce7e](https://github.com/adobe/helix-index-pipelines/commit/ae8ce7e18ef4e5b3821ac1c44d41cd850ae42e7e))
+
 ## [3.2.31](https://github.com/adobe/helix-index-pipelines/compare/v3.2.30...v3.2.31) (2020-11-13)
 
 
