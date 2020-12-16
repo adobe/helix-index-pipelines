@@ -1,3 +1,10 @@
+## [3.2.46](https://github.com/adobe/helix-index-pipelines/compare/v3.2.45...v3.2.46) (2020-12-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-logger to v2.3.1 ([89910f4](https://github.com/adobe/helix-index-pipelines/commit/89910f4975de1ceef866a85391675c83fbb31629))
+
 ## [3.2.45](https://github.com/adobe/helix-index-pipelines/compare/v3.2.44...v3.2.45) (2020-12-15)
 
 
