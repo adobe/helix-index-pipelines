@@ -37,9 +37,10 @@ const helpers = {
     const regex = new RegExp(re, 'g');
     elements.forEach((el) => {
       let m;
+      const content = typeof el === 'string' ? el : el.textContent;
 
       // eslint-disable-next-line no-cond-assign
-      while ((m = regex.exec(el.textContent)) !== null) {
+      while ((m = regex.exec(content)) !== null) {
         result.push(m[m.length - 1]);
       }
     });
