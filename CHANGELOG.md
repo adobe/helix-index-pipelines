@@ -1,3 +1,10 @@
+## [3.2.51](https://github.com/adobe/helix-index-pipelines/compare/v3.2.50...v3.2.51) (2021-01-14)
+
+
+### Bug Fixes
+
+* allow match on attribute value ([#393](https://github.com/adobe/helix-index-pipelines/issues/393)) ([c39630f](https://github.com/adobe/helix-index-pipelines/commit/c39630f6161a48148807c08ec564d58d8ff95ae0))
+
 ## [3.2.50](https://github.com/adobe/helix-index-pipelines/compare/v3.2.49...v3.2.50) (2021-01-11)
 
 
