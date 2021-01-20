@@ -35,7 +35,7 @@ describe('HTML Indexing with hlx up', () => {
   before(async () => {
     nock('https://raw.githubusercontent.com')
       .get((uri) => uri === '/adobe/helix-index-pipelines/main/helix-query.yaml')
-      .replyWithFile(200, p.resolve(__dirname, 'helix-query.yaml'))
+      .replyWithFile(200, p.resolve(__dirname, '..', 'helix-query.yaml'))
       .persist();
   });
 
