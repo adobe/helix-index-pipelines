@@ -80,7 +80,8 @@ async function fetchHTML(params, indices) {
           .replace(/\{owner\}/g, owner)
           .replace(/\{repo\}/g, repo)
           .replace(/\{ref\}/g, ref)
-          .replace(/\{path\}/g, path),
+          .replace(/\{path\}/g, path)
+          .replace(/(?<!:)\/\/+/g, '/'), // remove multiple slashes not preceded by colon
       };
       return prev;
     }, {});
