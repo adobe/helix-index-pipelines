@@ -32,6 +32,12 @@ describe('HTML Indexing with hlx up', () => {
       })
       .persist();
   });
+  before(async () => {
+    nock('https://raw.githubusercontent.com')
+      .get((uri) => uri === '/adobe/helix-index-pipelines/main/helix-query.yaml')
+      .replyWithFile(200, p.resolve(__dirname, '..', 'helix-query.yaml'))
+      .persist();
+  });
 
   it('Run html_json 1/2', async () => {
     const expected = await fse.readJson(p.resolve(SPEC_ROOT, 'hlx_up', 'post_html.json'));
