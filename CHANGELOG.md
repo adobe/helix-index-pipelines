@@ -1,3 +1,10 @@
+## [3.2.54](https://github.com/adobe/helix-index-pipelines/compare/v3.2.53...v3.2.54) (2021-01-21)
+
+
+### Bug Fixes
+
+* support leading path in slash ([#396](https://github.com/adobe/helix-index-pipelines/issues/396)) ([24e6c39](https://github.com/adobe/helix-index-pipelines/commit/24e6c39c50594ceddd743d7e79f4ae72bd79ac9e))
+
 ## [3.2.53](https://github.com/adobe/helix-index-pipelines/compare/v3.2.52...v3.2.53) (2021-01-21)
 
 
