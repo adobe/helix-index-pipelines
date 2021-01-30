@@ -1,3 +1,10 @@
+## [3.2.57](https://github.com/adobe/helix-index-pipelines/compare/v3.2.56...v3.2.57) (2021-01-30)
+
+
+### Bug Fixes
+
+* **ci:** use latest orb ([0a8d87e](https://github.com/adobe/helix-index-pipelines/commit/0a8d87e2265c600dcf196368f9d30e0f81d1537f))
+
 ## [3.2.56](https://github.com/adobe/helix-index-pipelines/compare/v3.2.55...v3.2.56) (2021-01-30)
 
 
