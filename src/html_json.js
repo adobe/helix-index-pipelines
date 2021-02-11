@@ -15,13 +15,10 @@ const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
 
-const fetchContext = process.env.HELIX_FETCH_FORCE_HTTP1
-  ? fetchAPI.context({
-    httpProtocols: ['http1'],
-    httpsProtocols: ['http1'],
-  })
+const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
+  ? fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] })
+  /* istanbul ignore next */
   : fetchAPI;
-const { fetch } = fetchContext;
 
 const helpers = {
   parseTimestamp: (elements, format) => elements.map((el) => {
