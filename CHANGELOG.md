@@ -1,3 +1,10 @@
+## [3.2.69](https://github.com/adobe/helix-index-pipelines/compare/v3.2.68...v3.2.69) (2021-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.1.5 ([#424](https://github.com/adobe/helix-index-pipelines/issues/424)) ([d7855f9](https://github.com/adobe/helix-index-pipelines/commit/d7855f9f7f5ad0b890b78782a55ec82f7dc5bde7))
+
 ## [3.2.68](https://github.com/adobe/helix-index-pipelines/compare/v3.2.67...v3.2.68) (2021-02-15)
 
 
