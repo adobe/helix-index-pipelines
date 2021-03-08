@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-index-pipelines",
-  "version": "3.2.82",
+  "version": "3.2.83",
   "private": true,
   "description": "Content extraction pipelines for indexing Project Helix websites\n",
   "main": "src/index.js",
