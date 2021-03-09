@@ -8,6 +8,7 @@
           "external-path": "/example-post.html",
           "fragmentID": "",
           "hero": "",
+          "last-modified": "",
           "products": [
             "Acrobat DC",
             "After Effects",
@@ -33,6 +34,7 @@
           "external-path": "/example-post.html",
           "fragmentID": "",
           "hero": "",
+          "missing": "",
           "products": "Products: Acrobat DC, After Effects, Photoshop, Illustrator, Creative Cloud",
           "sourceHash": "xxx",
           "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
