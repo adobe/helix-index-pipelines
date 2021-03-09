@@ -47,7 +47,6 @@ describe('HTML Indexing with hlx up', () => {
       ref: 'main',
       path: '/test/specs/hlx_up/post.html',
       __ow_logger: console,
-      forceHttp1: true,
     });
     assert.deepEqual(json, expected);
   });
@@ -60,7 +59,6 @@ describe('HTML Indexing with hlx up', () => {
       ref: 'main',
       path: '/test/specs/hlx_up/post1.html',
       __ow_logger: console,
-      forceHttp1: true,
     });
     assert.deepEqual(json, expected);
   });
@@ -73,7 +71,6 @@ describe('HTML Indexing with hlx up', () => {
       ref: 'main',
       path: '/test/specs/hlx_up/notfound.html',
       __ow_logger: console,
-      forceHttp1: true,
     });
 
     assert.ok(json.body['blog-posts'].error.reason);

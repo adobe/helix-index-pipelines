@@ -15,6 +15,11 @@ const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
 
+const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
+  ? fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] })
+  /* istanbul ignore next */
+  : fetchAPI;
+
 const helpers = {
   parseTimestamp: (elements, format) => {
     if (!elements) {
@@ -62,12 +67,11 @@ const helpers = {
  * Fetch all HTML sources for all indices configured, ensuring that the
  * HTML source is fetched at most once.
  *
- * @param {function} fetch fetch function to use
  * @param {object} params parameters
  * @param {object} indices index configurations
  * @returns object containing index definition and HTML response, keyed by name
  */
-async function fetchHTML(fetch, params, indices) {
+async function fetchHTML(params, indices) {
   const {
     owner, repo, ref, path, log,
   } = params;
@@ -100,29 +104,29 @@ async function fetchHTML(fetch, params, indices) {
   const results = new Map(await Promise.all(urls.map(async (url) => {
     log.info(`Reading HTML from: ${url}`);
 
-    let ret;
+    let resp;
     let body;
     try {
-      ret = await fetch(url, {
+      resp = await fetch(url, {
         headers: {
           'User-Agent': 'index-pipelines/html_json',
         },
         cache: 'no-store',
       });
-      body = await ret.text();
+      body = await resp.text();
     } catch (e) {
-      ret = {
+      resp = {
         ok: false,
         status: 500,
       };
       body = e.message;
     }
-    if (!ret.ok) {
+    if (!resp.ok) {
       const message = body < 100 ? body : `${body.substr(0, 100)}...`;
-      log.warn(`Fetching ${url} failed: statusCode: ${ret.status}, message: '${message}'`);
-      return [url, { error: { reason: message, status: ret.status } }];
+      log.warn(`Fetching ${url} failed: statusCode: ${resp.status}, message: '${message}'`);
+      return [url, { error: { reason: message, status: resp.status } }];
     }
-    return [url, { body, headers: ret.headers }];
+    return [url, { body, headers: resp.headers }];
   })));
 
   // Finish by filling in all responses acquired
@@ -253,18 +257,8 @@ async function indexHtml(params) {
     .withRepo(owner, repo, ref)
     .init()).toJSON();
 
-  let fetchContext;
-  if (forceHttp1 || process.env.HELIX_PIPELINE_FORCE_HTTP1) {
-    fetchContext = fetchAPI.context({
-      alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
-    });
-  } else {
-    /* istanbul ignore next */
-    fetchContext = fetchAPI;
-  }
-
   try {
-    const htmlIndices = await fetchHTML(fetchContext.fetch, {
+    const htmlIndices = await fetchHTML({
       owner, repo, ref, path, log,
     }, config.indices);
     const result = {};
