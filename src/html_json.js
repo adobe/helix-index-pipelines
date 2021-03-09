@@ -17,6 +17,9 @@ const fetchAPI = require('@adobe/helix-fetch');
 
 const helpers = {
   parseTimestamp: (elements, format) => {
+    if (!elements) {
+      return [];
+    }
     if (!Array.isArray(elements)) {
       // eslint-disable-next-line no-param-reassign
       elements = [elements];

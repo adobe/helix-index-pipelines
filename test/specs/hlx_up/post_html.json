@@ -35,6 +35,7 @@
           "teaser": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
           "topics": "Topics: Topic 1, Topic 2, Topic 3,",
           "hero": "Image",
+          "missing": "",
           "external-path": "/hlx_up/post.html"
         }
       ]

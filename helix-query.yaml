@@ -90,6 +90,10 @@ indices:
         select: meta[name="x-source-hash"]
         value: |
           attribute(el, 'content')
+      missing:
+        select: none
+        value: |
+          parseTimestamp(headers['missng'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
       external-path:
         select: none
         value: |
