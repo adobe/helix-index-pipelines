@@ -249,7 +249,7 @@ function evaluateHtml(body, headers, path, index, log) {
 
 async function indexHtml(params) {
   const {
-    owner, repo, ref, path, forceHttp1 = false,
+    owner, repo, ref, path,
     __ow_logger: log,
   } = params;
 
