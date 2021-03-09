@@ -35,9 +35,7 @@ describe('HTML Indexing with hlx up', () => {
   before(async () => {
     nock('https://raw.githubusercontent.com')
       .get((uri) => uri === '/adobe/helix-index-pipelines/main/helix-query.yaml')
-      .replyWithFile(200,
-        p.resolve(__dirname, '..', 'helix-query.yaml'),
-        { 'last-modified': 'Mon, 22 Feb 2021 15:28:00 GMT' })
+      .replyWithFile(200, p.resolve(__dirname, '..', 'helix-query.yaml'))
       .persist();
   });
 
@@ -49,6 +47,7 @@ describe('HTML Indexing with hlx up', () => {
       ref: 'main',
       path: '/test/specs/hlx_up/post.html',
       __ow_logger: console,
+      forceHttp1: true,
     });
     assert.deepEqual(json, expected);
   });
@@ -61,6 +60,7 @@ describe('HTML Indexing with hlx up', () => {
       ref: 'main',
       path: '/test/specs/hlx_up/post1.html',
       __ow_logger: console,
+      forceHttp1: true,
     });
     assert.deepEqual(json, expected);
   });
@@ -73,6 +73,7 @@ describe('HTML Indexing with hlx up', () => {
       ref: 'main',
       path: '/test/specs/hlx_up/notfound.html',
       __ow_logger: console,
+      forceHttp1: true,
     });
 
     assert.ok(json.body['blog-posts'].error.reason);

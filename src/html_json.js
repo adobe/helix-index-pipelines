@@ -13,11 +13,7 @@ const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
-const { fetch } = require('@adobe/helix-fetch').context({
-  httpsProtocols:
-  /* istanbul ignore next */
-    process.env.HELIX_FETCH_FORCE_HTTP1 ? ['http1'] : ['http2', 'http1'],
-});
+const fetchAPI = require('@adobe/helix-fetch');
 
 const helpers = {
   parseTimestamp: (elements, format) => {
@@ -63,11 +59,12 @@ const helpers = {
  * Fetch all HTML sources for all indices configured, ensuring that the
  * HTML source is fetched at most once.
  *
+ * @param {function} fetch fetch function to use
  * @param {object} params parameters
  * @param {object} indices index configurations
  * @returns object containing index definition and HTML response, keyed by name
  */
-async function fetchHTML(params, indices) {
+async function fetchHTML(fetch, params, indices) {
   const {
     owner, repo, ref, path, log,
   } = params;
@@ -245,7 +242,7 @@ function evaluateHtml(body, headers, path, index, log) {
 
 async function indexHtml(params) {
   const {
-    owner, repo, ref, path,
+    owner, repo, ref, path, forceHttp1 = false,
     __ow_logger: log,
   } = params;
 
@@ -253,8 +250,18 @@ async function indexHtml(params) {
     .withRepo(owner, repo, ref)
     .init()).toJSON();
 
+  let fetchContext;
+  if (forceHttp1 || process.env.HELIX_PIPELINE_FORCE_HTTP1) {
+    fetchContext = fetchAPI.context({
+      alpnProtocols: [fetchAPI.ALPN_HTTP1_1],
+    });
+  } else {
+    /* istanbul ignore next */
+    fetchContext = fetchAPI;
+  }
+
   try {
-    const htmlIndices = await fetchHTML({
+    const htmlIndices = await fetchHTML(fetchContext.fetch, {
       owner, repo, ref, path, log,
     }, config.indices);
     const result = {};
