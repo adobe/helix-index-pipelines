@@ -85,6 +85,10 @@ Replaces all occurrences of a substring in a text with a replacement.
 
 Parses a timestamp given as string, and returns its value as number of seconds since 1 Jan 1970.
 
+### el
+
+Returns the HTML elements selected by the `select` property.
+
 ### path
 
 Returns the path of the HTML document being indexed.
