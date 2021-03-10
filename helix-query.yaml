@@ -43,6 +43,10 @@ indices:
         select: meta[name="x-source-hash"]
         value: |
           attribute(el, 'content')
+      last-modified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
       external-path:
         select: none
         value: |
@@ -86,6 +90,10 @@ indices:
         select: meta[name="x-source-hash"]
         value: |
           attribute(el, 'content')
+      missing:
+        select: none
+        value: |
+          parseTimestamp(headers['missng'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
       external-path:
         select: none
         value: |

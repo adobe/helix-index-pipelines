@@ -14,6 +14,7 @@ const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
+const { Headers } = require('@adobe/helix-fetch');
 
 const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   ? fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] })
@@ -21,10 +22,20 @@ const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   : fetchAPI;
 
 const helpers = {
-  parseTimestamp: (elements, format) => elements.map((el) => {
-    const millis = moment.utc(el.textContent, format).valueOf();
-    return millis / 1000;
-  }),
+  parseTimestamp: (elements, format) => {
+    if (!elements) {
+      return [];
+    }
+    if (!Array.isArray(elements)) {
+      // eslint-disable-next-line no-param-reassign
+      elements = [elements];
+    }
+    return elements.map((el) => {
+      const content = typeof el === 'string' ? el : el.textContent;
+      const millis = moment.utc(content, format).valueOf();
+      return millis / 1000;
+    });
+  },
   attribute: (elements, name) => elements.map((el) => el.getAttribute(name)),
   textContent: (elements) => elements.map((el) => el.textContent),
   innerHTML: (elements) => elements.map((el) => el.innerHTML),
@@ -94,29 +105,29 @@ async function fetchHTML(params, indices) {
   const results = new Map(await Promise.all(urls.map(async (url) => {
     log.info(`Reading HTML from: ${url}`);
 
-    let ret;
+    let resp;
     let body;
     try {
-      ret = await fetch(url, {
+      resp = await fetch(url, {
         headers: {
           'User-Agent': 'index-pipelines/html_json',
         },
         cache: 'no-store',
       });
-      body = await ret.text();
+      body = await resp.text();
     } catch (e) {
-      ret = {
+      resp = {
         ok: false,
         status: 500,
       };
       body = e.message;
     }
-    if (!ret.ok) {
+    if (!resp.ok) {
       const message = body < 100 ? body : `${body.substr(0, 100)}...`;
-      log.warn(`Fetching ${url} failed: statusCode: ${ret.status}, message: '${message}'`);
-      return [url, { error: { reason: message, status: ret.status } }];
+      log.warn(`Fetching ${url} failed: statusCode: ${resp.status}, message: '${message}'`);
+      return [url, { error: { reason: message, status: resp.status } }];
     }
-    return [url, { response: body }];
+    return [url, { body, headers: new Headers(resp.headers) }];
   })));
 
   // Finish by filling in all responses acquired
@@ -146,6 +157,13 @@ function evaluate(expression, context) {
         }
         return undefined;
       }
+      case 'MemberExpression': {
+        const obj = vars[node.object.name];
+        if (obj) {
+          return obj.get(node.property.value);
+        }
+        return undefined;
+      }
       case 'Identifier': {
         return vars[node.name];
       }
@@ -170,6 +188,7 @@ function evaluate(expression, context) {
  * @param {Array.<HTMLElement>} elements
  * @param {string} expression
  * @param {Logger} log
+ * @param {object} vars
  */
 function getDOMValue(elements, expression, log, vars) {
   return evaluate(expression, {
@@ -186,10 +205,11 @@ function getDOMValue(elements, expression, log, vars) {
  * array.
  *
  * @param {Document} document
+ * @param {Object} headers
  * @param {Object} index
  * @param {Logger} log
  */
-function indexSingle(path, document, index, log) {
+function indexSingle(path, document, headers, index, log) {
   const record = {
     fragmentID: '',
   };
@@ -200,28 +220,30 @@ function indexSingle(path, document, index, log) {
     const expression = prop.value || prop.values;
     // create an array of elements
     const elements = select !== 'none' ? Array.from(document.querySelectorAll(select)) : [];
-    let value = getDOMValue(elements, expression, log, { path }) || [];
+    let value = getDOMValue(elements, expression, log, { path, headers }) || [];
     // concat for single value
     if (prop.value) {
-      value = value.length === 1 ? value[0] : value.join('');
+      if (Array.isArray(value)) {
+        value = value.length === 1 ? value[0] : value.join('');
+      }
     }
     record[name] = value;
   });
   return record;
 }
 
-function indexGroup(/* path, document, index */) {
+function indexGroup(/* path, document, headers, index */) {
   // TODO
   return [];
 }
 
-function evaluateHtml(response, path, index, log) {
+function evaluateHtml(body, headers, path, index, log) {
   const docs = [];
-  const { document } = new JSDOM(response).window;
+  const { document } = new JSDOM(body).window;
   if (index.group) {
-    docs.push(...indexGroup(path, document, index));
+    docs.push(...indexGroup(path, document, headers, index));
   } else {
-    docs.push(indexSingle(path, document, index, log));
+    docs.push(indexSingle(path, document, headers, index, log));
   }
   return docs;
 }
@@ -240,20 +262,20 @@ async function indexHtml(params) {
     const htmlIndices = await fetchHTML({
       owner, repo, ref, path, log,
     }, config.indices);
-    const body = {};
+    const result = {};
     Object.entries(htmlIndices)
-      .reduce((prev, [name, { index, result: { error, response } }]) => {
+      .reduce((prev, [name, { index, result: { error, body, headers } }]) => {
         if (error) {
-          body[name] = { error };
+          result[name] = { error };
         } else {
-          body[name] = { docs: evaluateHtml(response, path, index, log) };
+          result[name] = { docs: evaluateHtml(body, headers, path, index, log) };
         }
-        return body;
-      }, body);
+        return result;
+      }, result);
     return {
       status: 200,
       'content-type': 'application/json',
-      body,
+      body: result,
     };
   } catch (e) {
     log.error(`An error occurred: ${e.message}`, e);

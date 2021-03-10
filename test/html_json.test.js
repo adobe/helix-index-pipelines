@@ -29,7 +29,7 @@ describe('HTML Indexing with hlx up', () => {
       .reply(200, (uri) => {
         const path = p.resolve(SPEC_ROOT, 'hlx_up', p.basename(uri).replace(/\.md$/, '.html'));
         return fse.readFile(path, 'utf-8');
-      })
+      }, { 'last-modified': 'Mon, 22 Feb 2021 15:28:00 GMT' })
       .persist();
   });
   before(async () => {
