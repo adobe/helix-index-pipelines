@@ -1,3 +1,17 @@
+## [3.3.1](https://github.com/adobe/helix-index-pipelines/compare/v3.3.0...v3.3.1) (2021-03-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v9.1.0 ([e65a297](https://github.com/adobe/helix-index-pipelines/commit/e65a29762930e38c742834da92ed127bde896949))
+
+# [3.3.0](https://github.com/adobe/helix-index-pipelines/compare/v3.2.86...v3.3.0) (2021-03-10)
+
+
+### Features
+
+* **html:** allow referencing headers ([#449](https://github.com/adobe/helix-index-pipelines/issues/449)) ([031b6cb](https://github.com/adobe/helix-index-pipelines/commit/031b6cb6bad1597e9d12492bf381996d9c581769))
+
 ## [3.2.86](https://github.com/adobe/helix-index-pipelines/compare/v3.2.85...v3.2.86) (2021-03-09)
 
 
