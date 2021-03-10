@@ -52,7 +52,8 @@ enter the following expression:
 document.querySelectorAll('main > div:nth-of-type(3) > div > p:nth-of-type(1)');
 ```
 
-The `value` property contains an expression to apply to all HTML elements selected. The following functions are available:
+The `value` property contains an expression to apply to all HTML elements selected. That expression can contain
+a combination of functions and variables:
 
 ### innerHTML(el)
 
@@ -76,12 +77,21 @@ contain `by James Brown`, so it would capture everything following `by `.
 
 Useful for teasers, this selects a range of words out of an HTML element.
 
-### replace(s, substr, newSubstr)
+### replace(el, substr, newSubstr)
 
 Replaces all occurrences of a substring in a text with a replacement.
 
 ### parseTimestamp(el, format)
 
 Parses a timestamp given as string, and returns its value as number of seconds since 1 Jan 1970.
+
+### path
+
+Returns the path of the HTML document being indexed.
+
+### headers[name]
+
+Returns the value of the HTTP response header with the specified name, at the time the HTML document was fetched.
+
 
 <a name="footnote1">[1]</a>: The full definition of the `helix-query.yaml` is available here: https://github.com/adobe/helix-shared/blob/main/docs/indexconfig.md
