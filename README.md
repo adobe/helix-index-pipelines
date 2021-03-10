@@ -49,7 +49,7 @@ The `select` property is a CSS selector that grabs HTML elements out of your doc
 is selecting what you expect, you can test it in your browser's Javascript console, e.g. for the `author` selector shown above,
 enter the following expression:
 ```
-document.querySelectorAll('main > div:nth-of-type(3) > div > p:nth-of-type(1)');
+document.querySelectorAll('main > div:nth-of-type(3) > p:nth-of-type(1)');
 ```
 
 The `value` property contains an expression to apply to all HTML elements selected. That expression can contain
