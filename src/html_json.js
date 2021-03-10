@@ -14,6 +14,7 @@ const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
+const { Headers } = require('@adobe/helix-fetch');
 
 const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   ? fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] })
@@ -126,7 +127,7 @@ async function fetchHTML(params, indices) {
       log.warn(`Fetching ${url} failed: statusCode: ${resp.status}, message: '${message}'`);
       return [url, { error: { reason: message, status: resp.status } }];
     }
-    return [url, { body, headers: resp.headers }];
+    return [url, { body, headers: new Headers(resp.headers) }];
   })));
 
   // Finish by filling in all responses acquired
