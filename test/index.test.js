@@ -47,7 +47,6 @@ describe('HTML Indexing with hlx up', () => {
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/post.html',
-      __ow_logger: console,
     });
     assert.deepEqual(JSON.parse(resp.body), expected);
   });
@@ -59,7 +58,6 @@ describe('HTML Indexing with hlx up', () => {
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/post1.html',
-      __ow_logger: console,
     });
     assert.deepEqual(JSON.parse(resp.body), expected);
   });
@@ -71,7 +69,6 @@ describe('HTML Indexing with hlx up', () => {
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/notfound.html',
-      __ow_logger: console,
     });
     const json = JSON.parse(resp.body);
     json['blog-posts'].error.reason = '*';
