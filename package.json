@@ -5,7 +5,7 @@
   "description": "Content extraction pipelines for indexing Project Helix websites\n",
   "main": "src/index.js",
   "scripts": {
-    "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 20 --statements 50 --lines 55 mocha -i -f 'Post-Deploy' ",
+    "test": "nyc --reporter=text --reporter=lcov --check-coverage --branches 20 --statements 50 --lines 55 mocha -i -f 'Post-Deploy' ",
     "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 20 --statements 50 --lines 55 mocha -i -f 'Post-Deploy' --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
     "test-postdeploy": "mocha --reporter xunit --reporter-options output=./junit/test-results.xml -g 'Post-Deploy'",
     "lint": "./node_modules/.bin/eslint .",
