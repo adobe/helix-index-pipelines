@@ -127,6 +127,11 @@ async function fetchHTML(params, indices) {
       log.warn(`Fetching ${url} failed: statusCode: ${resp.status}, message: '${message}'`);
       return [url, { error: { reason: message, status: resp.status } }];
     }
+    const s = body.trim();
+    if (s.substring(s.length - 7).toLowerCase() !== '</html>') {
+      log.warn(`Document returned from ${url} seems incomplete (html end tag not found)`);
+      return [url, { error: { reason: 'document incomplete', status: 409 } }];
+    }
     return [url, { body, headers: new Headers(resp.headers) }];
   })));
 
