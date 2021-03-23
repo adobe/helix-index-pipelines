@@ -1,3 +1,10 @@
+## [3.3.7](https://github.com/adobe/helix-index-pipelines/compare/v3.3.6...v3.3.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **html:** check returned html for completeness ([#458](https://github.com/adobe/helix-index-pipelines/issues/458)) ([30d9fda](https://github.com/adobe/helix-index-pipelines/commit/30d9fda314f973b14d17ef64ec4cf9493a948d9b))
+
 ## [3.3.6](https://github.com/adobe/helix-index-pipelines/compare/v3.3.5...v3.3.6) (2021-03-23)
 
 
