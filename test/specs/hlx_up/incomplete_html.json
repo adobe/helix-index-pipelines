@@ -1,18 +1,14 @@
 {
-  "content-type": "application/json",
-  "status": 200,
-  "body": {
-    "blog-posts": {
-      "error": {
-        "reason": "document incomplete",
-        "status": 409
-      }
-    },
-    "blog-posts-flat": {
-      "error": {
-        "reason": "document incomplete",
-        "status": 409
-      }
+  "blog-posts": {
+    "error": {
+      "reason": "document incomplete",
+      "status": 409
+    }
+  },
+  "blog-posts-flat": {
+    "error": {
+      "reason": "document incomplete",
+      "status": 409
     }
   }
 }

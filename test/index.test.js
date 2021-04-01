@@ -78,13 +78,13 @@ describe('HTML Indexing with hlx up', () => {
 
   it('Run html_json against incomplete html', async () => {
     const expected = await fse.readJson(p.resolve(SPEC_ROOT, 'hlx_up', 'incomplete_html.json'));
-    const json = await indexHtml({
+    const resp = await main({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/incomplete.html',
-      __ow_logger: console,
     });
+    const json = JSON.parse(resp.body);
     assert.deepEqual(json, expected);
   });
 });

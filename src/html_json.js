@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Adobe. All rights reserved.
+ * Copyright 2019 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -14,10 +14,7 @@ const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
 const { IndexConfig } = require('@adobe/helix-shared');
 const fetchAPI = require('@adobe/helix-fetch');
-const { Headers, Response } = require('@adobe/helix-fetch');
-const { wrap } = require('@adobe/openwhisk-action-utils');
-const { logger } = require('@adobe/openwhisk-action-logger');
-const { wrap: status } = require('@adobe/helix-status');
+const { Headers } = require('@adobe/helix-fetch');
 
 const { fetch } = process.env.HELIX_FETCH_FORCE_HTTP1
   ? fetchAPI.context({ alpnProtocols: [fetchAPI.ALPN_HTTP1_1] })
@@ -217,8 +214,11 @@ function getDOMValue(elements, expression, log, vars) {
  * @param {Object} index
  * @param {Logger} log
  */
-function indexHTML(path, document, headers, index, log) {
-  const record = {};
+function indexSingle(path, document, headers, index, log) {
+  const record = {
+    fragmentID: '',
+  };
+
   /* Walk through all index properties */
   Object.keys(index.properties).forEach((name) => {
     const { select, ...prop } = index.properties[name];
@@ -237,24 +237,26 @@ function indexHTML(path, document, headers, index, log) {
   return record;
 }
 
+function indexGroup(/* path, document, headers, index */) {
+  // TODO
+  return [];
+}
+
 function evaluateHtml(body, headers, path, index, log) {
   const docs = [];
   const { document } = new JSDOM(body).window;
-  docs.push(indexHTML(path, document, headers, index, log));
+  if (index.group) {
+    docs.push(...indexGroup(path, document, headers, index));
+  } else {
+    docs.push(indexSingle(path, document, headers, index, log));
+  }
   return docs;
 }
 
-async function main(req, context) {
-  const { log } = context;
-
-  const { searchParams } = new URL(req.url);
-  const params = Array.from(searchParams.entries()).reduce((p, [key, value]) => {
-    // eslint-disable-next-line no-param-reassign
-    p[key] = value;
-    return p;
-  }, {});
+async function indexHtml(params) {
   const {
     owner, repo, ref, path,
+    __ow_logger: log,
   } = params;
 
   const config = (await new IndexConfig()
@@ -275,19 +277,15 @@ async function main(req, context) {
         }
         return result;
       }, result);
-    return new Response(JSON.stringify(result, undefined, 2), {
+    return {
       status: 200,
-      headers: {
-        'content-type': 'application/json',
-      },
-    });
+      'content-type': 'application/json',
+      body: result,
+    };
   } catch (e) {
     log.error(`An error occurred: ${e.message}`, e);
-    return new Response(e.message, { status: 500 });
+    return { status: 500, body: e.message };
   }
 }
 
-module.exports.main = wrap(main)
-  .with(status)
-  .with(logger.trace)
-  .with(logger);
+module.exports = indexHtml;

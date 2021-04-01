@@ -1,47 +1,43 @@
 {
-  "body": {
-    "blog-posts": {
-      "docs": [
-        {
-          "author": "Russell Brady",
-          "date": 1592438400,
-          "external-path": "/example-post.html",
-          "hero": "",
-          "last-modified": "",
-          "products": [
-            "Acrobat DC",
-            "After Effects",
-            "Photoshop",
-            "Illustrator",
-            "Creative Cloud"
-          ],
-          "sourceHash": "xxx",
-          "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
-          "title": "Scottish Digital Agency Brings Pot-Load of Views to Rainbow “Thank You” Campaign",
-          "topics": [
-            "Creative Inspiration & Trends",
-            "Design"
-          ]
-        }
-      ]
-    },
-    "blog-posts-flat": {
-      "docs": [
-        {
-          "author": "by Russell Brady",
-          "date": "\n<p>by Russell Brady</p>\n<p>posted on 06-18-2020</p>\n",
-          "external-path": "/example-post.html",
-          "hero": "",
-          "missing": "",
-          "products": "Products: Acrobat DC, After Effects, Photoshop, Illustrator, Creative Cloud",
-          "sourceHash": "xxx",
-          "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
-          "title": "Scottish Digital Agency Brings Pot-Load of Views to Rainbow “Thank You” Campaign",
-          "topics": "Topics: Creative Inspiration &amp; Trends, Design"
-        }
-      ]
-    }
+  "blog-posts": {
+    "docs": [
+      {
+        "author": "Russell Brady",
+        "date": 1592438400,
+        "external-path": "/example-post.html",
+        "hero": "",
+        "last-modified": "",
+        "products": [
+          "Acrobat DC",
+          "After Effects",
+          "Photoshop",
+          "Illustrator",
+          "Creative Cloud"
+        ],
+        "sourceHash": "xxx",
+        "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
+        "title": "Scottish Digital Agency Brings Pot-Load of Views to Rainbow “Thank You” Campaign",
+        "topics": [
+          "Creative Inspiration & Trends",
+          "Design"
+        ]
+      }
+    ]
   },
-  "content-type": "application/json",
-  "status": 200
+  "blog-posts-flat": {
+    "docs": [
+      {
+        "author": "by Russell Brady",
+        "date": "\n<p>by Russell Brady</p>\n<p>posted on 06-18-2020</p>\n",
+        "external-path": "/example-post.html",
+        "hero": "",
+        "missing": "",
+        "products": "Products: Acrobat DC, After Effects, Photoshop, Illustrator, Creative Cloud",
+        "sourceHash": "xxx",
+        "teaser": "A collaboration between billboard powerhouse, Ocean Outdoor, and The Lane",
+        "title": "Scottish Digital Agency Brings Pot-Load of Views to Rainbow “Thank You” Campaign",
+        "topics": "Topics: Creative Inspiration &amp; Trends, Design"
+      }
+    ]
+  }
 }
