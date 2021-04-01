@@ -1,3 +1,80 @@
+## [3.3.14](https://github.com/adobe/helix-index-pipelines/compare/v3.3.13...v3.3.14) (2021-03-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.21.11 ([b5bab0a](https://github.com/adobe/helix-index-pipelines/commit/b5bab0a24d1a85ad0a0d417648234c7989c0f70f))
+
+## [3.3.13](https://github.com/adobe/helix-index-pipelines/compare/v3.3.12...v3.3.13) (2021-03-30)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([091c3c7](https://github.com/adobe/helix-index-pipelines/commit/091c3c7dd31afe97e2a03b9849e48fe6de2d23ec))
+
+## [3.3.12](https://github.com/adobe/helix-index-pipelines/compare/v3.3.11...v3.3.12) (2021-03-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.21.9 ([d025c9e](https://github.com/adobe/helix-index-pipelines/commit/d025c9ed42bbc9054a8015f7f84271ee7b13a9b0))
+
+## [3.3.11](https://github.com/adobe/helix-index-pipelines/compare/v3.3.10...v3.3.11) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([7fbfd3b](https://github.com/adobe/helix-index-pipelines/commit/7fbfd3bb8c5da4b2776f53f898fad595ea40f456))
+
+## [3.3.10](https://github.com/adobe/helix-index-pipelines/compare/v3.3.9...v3.3.10) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.2.0 ([140edaf](https://github.com/adobe/helix-index-pipelines/commit/140edaf0e97a3a18c350dcaa49e4af743b7f0b8c))
+
+## [3.3.9](https://github.com/adobe/helix-index-pipelines/compare/v3.3.8...v3.3.9) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#462](https://github.com/adobe/helix-index-pipelines/issues/462)) ([342add0](https://github.com/adobe/helix-index-pipelines/commit/342add0fe57e9a28fcbf80d68db62eaaca9363af))
+
+## [3.3.8](https://github.com/adobe/helix-index-pipelines/compare/v3.3.7...v3.3.8) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.1.9 ([#461](https://github.com/adobe/helix-index-pipelines/issues/461)) ([2825ad1](https://github.com/adobe/helix-index-pipelines/commit/2825ad1d74f1083962d8d0eb8ca14a82512aebaa))
+
+## [3.3.7](https://github.com/adobe/helix-index-pipelines/compare/v3.3.6...v3.3.7) (2021-03-23)
+
+
+### Bug Fixes
+
+* **html:** check returned html for completeness ([#458](https://github.com/adobe/helix-index-pipelines/issues/458)) ([30d9fda](https://github.com/adobe/helix-index-pipelines/commit/30d9fda314f973b14d17ef64ec4cf9493a948d9b))
+
+## [3.3.6](https://github.com/adobe/helix-index-pipelines/compare/v3.3.5...v3.3.6) (2021-03-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v9.1.1 ([#460](https://github.com/adobe/helix-index-pipelines/issues/460)) ([7aa31e1](https://github.com/adobe/helix-index-pipelines/commit/7aa31e155e358e87c09ff419e68d3b69784041f9))
+
+## [3.3.5](https://github.com/adobe/helix-index-pipelines/compare/v3.3.4...v3.3.5) (2021-03-22)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([1e681b4](https://github.com/adobe/helix-index-pipelines/commit/1e681b460b02895751b5714e0dd4c156c17761b5))
+
+## [3.3.4](https://github.com/adobe/helix-index-pipelines/compare/v3.3.3...v3.3.4) (2021-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.21.5 ([55f2a2d](https://github.com/adobe/helix-index-pipelines/commit/55f2a2dd85a469fd474405de1156eb69e4e39f14))
+
 ## [3.3.3](https://github.com/adobe/helix-index-pipelines/compare/v3.3.2...v3.3.3) (2021-03-15)
 
 
