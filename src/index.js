@@ -186,7 +186,6 @@ function evaluate(expression, context) {
   }
 
   const tree = jsep(expression);
-  // console.log(tree);
   return evalNode(tree);
 }
 

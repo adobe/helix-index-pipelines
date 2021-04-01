@@ -3,19 +3,23 @@
     "docs": [
       {
         "author": "James Fox",
-        "title": "Header 1",
+        "call-unknown-function": "",
+        "condition-unsupported": "",
         "date": 1564617600,
+        "external-path": "/hlx_up/post.html",
+        "hero": "Image",
+        "last-modified": 1614007680,
+        "member-unknown-var": "",
         "products": [],
+        "server": "nock",
         "sourceHash": "xrzsefsfgd",
         "teaser": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
+        "title": "Header 1",
         "topics": [
           "Topic 1",
           "Topic 2",
           "Topic 3"
-        ],
-        "hero": "Image",
-        "last-modified": 1614007680,
-        "external-path": "/hlx_up/post.html"
+        ]
       }
     ]
   },
