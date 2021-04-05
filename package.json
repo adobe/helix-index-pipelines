@@ -32,7 +32,7 @@
   "dependencies": {
     "@adobe/helix-epsagon": "1.6.1",
     "@adobe/helix-fetch": "2.2.0",
-    "@adobe/helix-shared": "7.21.13",
+    "@adobe/helix-shared": "7.21.14",
     "@adobe/helix-status": "9.1.5",
     "@adobe/openwhisk-action-logger": "2.4.3",
     "@adobe/openwhisk-action-utils": "4.4.3",
