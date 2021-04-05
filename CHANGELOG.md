@@ -1,3 +1,10 @@
+## [3.3.20](https://github.com/adobe/helix-index-pipelines/compare/v3.3.19...v3.3.20) (2021-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency jsdom to v16.5.2 ([#474](https://github.com/adobe/helix-index-pipelines/issues/474)) ([be79899](https://github.com/adobe/helix-index-pipelines/commit/be798996da1d38dabaaa296e526b799627181328))
+
 ## [3.3.19](https://github.com/adobe/helix-index-pipelines/compare/v3.3.18...v3.3.19) (2021-04-05)
 
 
