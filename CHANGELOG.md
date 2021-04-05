@@ -1,3 +1,10 @@
+## [3.3.18](https://github.com/adobe/helix-index-pipelines/compare/v3.3.17...v3.3.18) (2021-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v9.1.5 ([#473](https://github.com/adobe/helix-index-pipelines/issues/473)) ([be8cb2c](https://github.com/adobe/helix-index-pipelines/commit/be8cb2c416ae0fe0bb67e246eee68de2cf7ec745))
+
 ## [3.3.17](https://github.com/adobe/helix-index-pipelines/compare/v3.3.16...v3.3.17) (2021-04-03)
 
 
