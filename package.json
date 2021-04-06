@@ -1,19 +1,20 @@
 {
   "name": "@adobe/helix-index-pipelines",
-  "version": "3.3.20",
+  "version": "3.3.20-test",
   "private": true,
   "description": "Content extraction pipelines for indexing Project Helix websites\n",
   "main": "src/index.js",
   "scripts": {
-    "test": "nyc --reporter=text --reporter=lcov --check-coverage --branches 20 --statements 50 --lines 55 mocha -i -f 'Post-Deploy' ",
-    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 20 --statements 50 --lines 55 mocha -i -f 'Post-Deploy' --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
+    "test": "nyc --reporter=text --reporter=lcov --check-coverage --branches 80 --statements 90 --lines 90 mocha -i -f 'Post-Deploy' ",
+    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 80 --statements 90 --lines 90 mocha -i -f 'Post-Deploy' --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
     "test-postdeploy": "mocha --reporter xunit --reporter-options output=./junit/test-results.xml -g 'Post-Deploy'",
     "lint": "./node_modules/.bin/eslint .",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
-    "deploy": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json",
-    "deploy-sequences": "wsk-builder --no-build -no-hints -l latest -l major -l minor",
-    "deploy-ci": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci"
+    "build": "hedy -v",
+    "deploy": "hedy -v --deploy --test=/_status_check/healthcheck.json",
+    "deploy-sequences": "hedy --no-build -no-hints -l latest -l major -l minor",
+    "deploy-ci": "hedy -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,6 @@
   },
   "homepage": "https://github.com/adobe/helix-index-pipelines#readme",
   "dependencies": {
-    "@adobe/helix-epsagon": "1.6.1",
     "@adobe/helix-fetch": "2.2.0",
     "@adobe/helix-shared": "7.21.14",
     "@adobe/helix-status": "9.1.5",
@@ -44,10 +44,12 @@
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.4",
-    "@adobe/openwhisk-action-builder": "3.0.19",
+    "@adobe/helix-deploy": "3.16.5",
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/exec": "5.0.0",
     "@semantic-release/git": "9.0.0",
+    "chai": "4.3.4",
+    "chai-http": "4.3.0",
     "codecov": "3.8.1",
     "commitizen": "4.2.3",
     "cz-conventional-changelog": "3.3.0",

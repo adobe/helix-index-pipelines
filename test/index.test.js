@@ -17,9 +17,10 @@ const assert = require('assert');
 const nock = require('nock');
 const p = require('path');
 const fse = require('fs-extra');
+const { main: universalMain } = require('../src/index.js');
+const { retrofit } = require('./utils.js');
 
-const indexHtml = require('../src/html_json.js');
-
+const main = retrofit(universalMain);
 const SPEC_ROOT = p.resolve(__dirname, 'specs');
 
 describe('HTML Indexing with hlx up', () => {
@@ -29,64 +30,64 @@ describe('HTML Indexing with hlx up', () => {
       .reply(200, (uri) => {
         const path = p.resolve(SPEC_ROOT, 'hlx_up', p.basename(uri).replace(/\.md$/, '.html'));
         return fse.readFile(path, 'utf-8');
-      }, { 'last-modified': 'Mon, 22 Feb 2021 15:28:00 GMT' })
+      }, {
+        'last-modified': 'Mon, 22 Feb 2021 15:28:00 GMT',
+        server: 'nock',
+      })
       .persist();
   });
   before(async () => {
     nock('https://raw.githubusercontent.com')
       .get((uri) => uri === '/adobe/helix-index-pipelines/main/helix-query.yaml')
-      .replyWithFile(200, p.resolve(__dirname, '..', 'helix-query.yaml'))
+      .replyWithFile(200, p.resolve(SPEC_ROOT, 'hlx_up', 'helix-query.yaml'))
       .persist();
   });
 
   it('Run html_json 1/2', async () => {
     const expected = await fse.readJson(p.resolve(SPEC_ROOT, 'hlx_up', 'post_html.json'));
-    const json = await indexHtml({
+    const resp = await main({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/post.html',
-      __ow_logger: console,
     });
-    assert.deepEqual(json, expected);
+    assert.deepEqual(JSON.parse(resp.body), expected);
   });
 
   it('Run html_json 2/2', async () => {
     const expected = await fse.readJson(p.resolve(SPEC_ROOT, 'hlx_up', 'post1_html.json'));
-    const json = await indexHtml({
+    const resp = await main({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/post1.html',
-      __ow_logger: console,
     });
-    assert.deepEqual(json, expected);
+    assert.deepEqual(JSON.parse(resp.body), expected);
   });
 
   it('Run html_json against non existing html', async () => {
     const expected = await fse.readJson(p.resolve(SPEC_ROOT, 'hlx_up', 'notfound.json'));
-    const json = await indexHtml({
+    const resp = await main({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/notfound.html',
-      __ow_logger: console,
     });
-
-    assert.ok(json.body['blog-posts'].error.reason);
-    json.body['blog-posts'].error.reason = '*';
+    const json = JSON.parse(resp.body);
+    json['blog-posts'].error.reason = '*';
+    json['blog-posts-flat'].error.reason = '*';
     assert.deepEqual(json, expected);
   });
 
   it('Run html_json against incomplete html', async () => {
     const expected = await fse.readJson(p.resolve(SPEC_ROOT, 'hlx_up', 'incomplete_html.json'));
-    const json = await indexHtml({
+    const resp = await main({
       owner: 'adobe',
       repo: 'helix-index-pipelines',
       ref: 'main',
       path: '/test/specs/hlx_up/incomplete.html',
-      __ow_logger: console,
     });
+    const json = JSON.parse(resp.body);
     assert.deepEqual(json, expected);
   });
 });

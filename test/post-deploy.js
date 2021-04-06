@@ -11,117 +11,101 @@
  */
 
 /* eslint-env mocha */
-const assert = require('assert');
+/* eslint-disable no-unused-expressions */
+
 const path = require('path');
-const openwhisk = require('openwhisk');
+const querystring = require('querystring');
 const fse = require('fs-extra');
-const pkgJson = require('../package.json');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const { createTargets } = require('./post-deploy-utils.js');
+const { version } = require('../package.json');
 
-require('dotenv').config();
+chai.use(chaiHttp);
+const { expect } = chai;
 
-describe('Post-Deploy Tests', () => {
-  const namespace = process.env.WSK_NAMESPACE;
-  let wskOpts = {};
-  let actionName;
-  let { version } = pkgJson;
-  let branch = 'main';
+createTargets()
+  .forEach((target) => {
+    describe(`Post-Deploy Tests (${target.title()})`, () => {
+      it('Service responds to healthcheck', async () => {
+        const url = `${target.urlPath()}/_status_check/healthcheck.json`;
+        await chai.request(target.host())
+          .get(url)
+          .then((response) => {
+            expect(response).to.have.status(200);
+            expect(response).to.be.json;
+            delete response.body.response_time;
+            delete response.body.process;
+            expect(response.body).to.eql({
+              status: 'OK',
+              // somehow the status check creates a weird version for ci builds.
+              version: process.env.CIRCLE_BUILD_NUM ? `0.0.0+ci${process.env.CIRCLE_BUILD_NUM}` : version,
+            });
+          })
+          .catch((e) => {
+            e.message = `At ${url}\n      ${e.message}`;
+            throw e;
+          });
+      }).timeout(30000);
 
-  before(() => {
-    wskOpts = {
-      api_key: process.env.WSK_AUTH,
-      apihost: process.env.WSK_APIHOST || 'https://adobeioruntime.net',
-    };
-    if (process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
-      version = `ci${process.env.CIRCLE_BUILD_NUM}`;
-      branch = process.env.CIRCLE_BRANCH;
-    }
-    // eslint-disable-next-line no-template-curly-in-string
-    actionName = pkgJson.wsk.name.replace('${version}', version);
+      it('Service can index our own page', async () => {
+        const expected = await fse.readJson(path.resolve(__dirname, 'specs', 'example-post.json'));
+        const url = `${target.urlPath()}?${querystring.stringify({
+          owner: 'adobe',
+          repo: 'helix-index-pipelines',
+          ref: 'main',
+          path: '/test/specs/example-post.html',
+        })}`;
+        await chai.request(target.host())
+          .get(url)
+          .then((response) => {
+            expect(response).to.have.status(200);
+            expect(response).to.be.json;
+            const { body } = response;
+
+            // source hash is currently computed based on the `ref` of the content, which is not
+            // very stable. so we just mask it here
+            body['blog-posts'].docs[0].sourceHash = 'xxx';
+            body['blog-posts-flat'].docs[0].sourceHash = 'xxx';
+            expect(body).to.eql(expected);
+          })
+          .catch((e) => {
+            e.message = `At ${url}\n      ${e.message}`;
+            throw e;
+          });
+      }).timeout(30000);
+
+      it('Service returns a 404 for unknown resource', async () => {
+        const url = `${target.urlPath()}?${querystring.stringify({
+          owner: 'adobe',
+          repo: 'helix-index-pipelines',
+          ref: 'main',
+          path: '/notfound.html',
+        })}`;
+        await chai.request(target.host())
+          .get(url)
+          .then((response) => {
+            expect(response).to.have.status(200);
+            expect(response).to.be.json;
+            expect(response.body).to.eql({
+              'blog-posts': {
+                error: {
+                  reason: '<!doctype html>\n<html lang="en">\n  <head>\n    <title>Resource not found</title>\n    <!-- Required me...',
+                  status: 404,
+                },
+              },
+              'blog-posts-flat': {
+                error: {
+                  reason: '<!doctype html>\n<html lang="en">\n  <head>\n    <title>Resource not found</title>\n    <!-- Required me...',
+                  status: 404,
+                },
+              },
+            });
+          })
+          .catch((e) => {
+            e.message = `At ${url}\n      ${e.message}`;
+            throw e;
+          });
+      }).timeout(20000);
+    });
   });
-
-  it('Service responds to healthcheck', async () => {
-    const ow = openwhisk(wskOpts);
-    const ret = await ow.actions.invoke({
-      namespace,
-      actionName,
-      blocking: true,
-      result: false,
-      params: {
-        __ow_path: '/_status_check/healthcheck.json',
-      },
-    });
-    delete ret.response.result.body.response_time;
-    assert.deepEqual(ret.response.result, {
-      body: {
-        process: {
-          activation: ret.activationId,
-        },
-        status: 'OK',
-        version,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Version': version,
-      },
-      statusCode: 200,
-    });
-  });
-
-  it('Service can index our own page', async () => {
-    const expected = await fse.readJson(path.resolve(__dirname, 'specs', 'example-post.json'));
-    const ow = openwhisk(wskOpts);
-    const ret = await ow.actions.invoke({
-      namespace,
-      actionName,
-      blocking: true,
-      result: false,
-      params: {
-        owner: 'adobe',
-        repo: 'helix-index-pipelines',
-        ref: branch,
-        path: '/test/specs/example-post.html',
-      },
-    });
-
-    // source hash is currently computed based on the `ref` of the content, which is not very
-    // stable. so we just mask it here
-    ret.response.result.body['blog-posts'].docs[0].sourceHash = 'xxx';
-    ret.response.result.body['blog-posts-flat'].docs[0].sourceHash = 'xxx';
-
-    assert.deepEqual(ret.response.result, expected);
-  }).timeout(30000);
-
-  it('Service returns a 404 for unknown resource', async () => {
-    const ow = openwhisk(wskOpts);
-    const ret = await ow.actions.invoke({
-      namespace,
-      actionName,
-      blocking: true,
-      result: false,
-      params: {
-        owner: 'adobe',
-        repo: 'helix-index-pipelines',
-        ref: branch,
-        path: '/notfound.html',
-      },
-    });
-    assert.deepEqual(ret.response.result, {
-      body: {
-        'blog-posts': {
-          error: {
-            reason: '<!doctype html>\n<html lang="en">\n  <head>\n    <title>Resource not found</title>\n    <!-- Required me...',
-            status: 404,
-          },
-        },
-        'blog-posts-flat': {
-          error: {
-            reason: '<!doctype html>\n<html lang="en">\n  <head>\n    <title>Resource not found</title>\n    <!-- Required me...',
-            status: 404,
-          },
-        },
-      },
-      'content-type': 'application/json',
-      status: 200,
-    });
-  }).timeout(20000);
-});
