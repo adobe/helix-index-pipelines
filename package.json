@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-index-pipelines",
-  "version": "3.3.20-test",
+  "version": "3.3.20",
   "private": true,
   "description": "Content extraction pipelines for indexing Project Helix websites\n",
   "main": "src/index.js",
@@ -22,7 +22,8 @@
   },
   "wsk": {
     "namespace": "helix",
-    "name": "helix-observation/index-pipelines@${version}"
+    "name": "helix-observation/index-pipelines@${version}",
+    "memory": 512
   },
   "author": "",
   "license": "Apache-2.0",
