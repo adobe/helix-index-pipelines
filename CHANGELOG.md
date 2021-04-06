@@ -1,3 +1,10 @@
+## [3.3.21](https://github.com/adobe/helix-index-pipelines/compare/v3.3.20...v3.3.21) (2021-04-06)
+
+
+### Bug Fixes
+
+* avoid oom in aws ([462d050](https://github.com/adobe/helix-index-pipelines/commit/462d050e5e60c5cf404a1c6a7341c92547fde6ba))
+
 ## [3.3.20](https://github.com/adobe/helix-index-pipelines/compare/v3.3.19...v3.3.20) (2021-04-05)
 
 
