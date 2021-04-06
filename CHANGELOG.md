@@ -1,3 +1,45 @@
+## [3.3.20](https://github.com/adobe/helix-index-pipelines/compare/v3.3.19...v3.3.20) (2021-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency jsdom to v16.5.2 ([#474](https://github.com/adobe/helix-index-pipelines/issues/474)) ([be79899](https://github.com/adobe/helix-index-pipelines/commit/be798996da1d38dabaaa296e526b799627181328))
+
+## [3.3.19](https://github.com/adobe/helix-index-pipelines/compare/v3.3.18...v3.3.19) (2021-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.21.14 ([#475](https://github.com/adobe/helix-index-pipelines/issues/475)) ([7e5ea95](https://github.com/adobe/helix-index-pipelines/commit/7e5ea95f06e15eae1ff9ef1931acdd0dcad7910c))
+
+## [3.3.18](https://github.com/adobe/helix-index-pipelines/compare/v3.3.17...v3.3.18) (2021-04-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v9.1.5 ([#473](https://github.com/adobe/helix-index-pipelines/issues/473)) ([be8cb2c](https://github.com/adobe/helix-index-pipelines/commit/be8cb2c416ae0fe0bb67e246eee68de2cf7ec745))
+
+## [3.3.17](https://github.com/adobe/helix-index-pipelines/compare/v3.3.16...v3.3.17) (2021-04-03)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#472](https://github.com/adobe/helix-index-pipelines/issues/472)) ([70bfcc2](https://github.com/adobe/helix-index-pipelines/commit/70bfcc2b29ffe01f01c661ea3b5096c0fb278b75))
+
+## [3.3.16](https://github.com/adobe/helix-index-pipelines/compare/v3.3.15...v3.3.16) (2021-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([e4f75fe](https://github.com/adobe/helix-index-pipelines/commit/e4f75fedf6adb23dd3ce64023249e2414572980a))
+
+## [3.3.15](https://github.com/adobe/helix-index-pipelines/compare/v3.3.14...v3.3.15) (2021-04-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-logger to v2.4.2 ([5d3df09](https://github.com/adobe/helix-index-pipelines/commit/5d3df09051df4bd02393c6d53b9f7c1e8f3259c4))
+
 ## [3.3.14](https://github.com/adobe/helix-index-pipelines/compare/v3.3.13...v3.3.14) (2021-03-30)
 
 
