@@ -1,3 +1,10 @@
+## [3.3.24](https://github.com/adobe/helix-index-pipelines/compare/v3.3.23...v3.3.24) (2021-04-09)
+
+
+### Bug Fixes
+
+* **test:** use correct version for release tests ([012c549](https://github.com/adobe/helix-index-pipelines/commit/012c5494eee16dab4dfa712206b510f6d3773ac2))
+
 ## [3.3.23](https://github.com/adobe/helix-index-pipelines/compare/v3.3.22...v3.3.23) (2021-04-09)
 
 
