@@ -25,7 +25,7 @@ class OpenwhiskTarget {
     if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main' && !opts.version) {
       this.version = `ci${process.env.CIRCLE_BUILD_NUM}`;
       // somehow the status check creates a weird version for ci builds.
-      this.statusVersion = `0.0.0+ci${process.env.CIRCLE_BUILD_NUM}`
+      this.statusVersion = `0.0.0+ci${process.env.CIRCLE_BUILD_NUM}`;
     }
   }
 
