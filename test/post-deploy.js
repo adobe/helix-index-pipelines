@@ -19,7 +19,6 @@ const fse = require('fs-extra');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { createTargets } = require('./post-deploy-utils.js');
-const { version } = require('../package.json');
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -38,8 +37,7 @@ createTargets()
             delete response.body.process;
             expect(response.body).to.eql({
               status: 'OK',
-              // somehow the status check creates a weird version for ci builds.
-              version: process.env.CIRCLE_BUILD_NUM ? `0.0.0+ci${process.env.CIRCLE_BUILD_NUM}` : version,
+              version: target.statusVersion || target.version,
             });
           })
           .catch((e) => {
