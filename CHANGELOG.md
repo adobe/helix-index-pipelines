@@ -1,3 +1,10 @@
+## [3.3.25](https://github.com/adobe/helix-index-pipelines/compare/v3.3.24...v3.3.25) (2021-04-12)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([369a529](https://github.com/adobe/helix-index-pipelines/commit/369a529743b83f19dac23f6129864dd04abcb29d))
+
 ## [3.3.24](https://github.com/adobe/helix-index-pipelines/compare/v3.3.23...v3.3.24) (2021-04-09)
 
 
