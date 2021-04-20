@@ -1,3 +1,10 @@
+## [3.3.29](https://github.com/adobe/helix-index-pipelines/compare/v3.3.28...v3.3.29) (2021-04-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-deploy to v4.0.6 ([#493](https://github.com/adobe/helix-index-pipelines/issues/493)) ([d55744e](https://github.com/adobe/helix-index-pipelines/commit/d55744e59703c944e296ca8d707647a17b402b39))
+
 ## [3.3.28](https://github.com/adobe/helix-index-pipelines/compare/v3.3.27...v3.3.28) (2021-04-19)
 
 
