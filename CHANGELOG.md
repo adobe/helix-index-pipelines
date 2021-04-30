@@ -1,3 +1,10 @@
+## [3.3.34](https://github.com/adobe/helix-index-pipelines/compare/v3.3.33...v3.3.34) (2021-04-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v8 ([b9bd703](https://github.com/adobe/helix-index-pipelines/commit/b9bd703243a91f291438a1eafd9f9006aba91278))
+
 ## [3.3.33](https://github.com/adobe/helix-index-pipelines/compare/v3.3.32...v3.3.33) (2021-04-28)
 
 
