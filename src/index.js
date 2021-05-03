@@ -12,7 +12,7 @@
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const jsep = require('jsep');
-const { IndexConfig } = require('@adobe/helix-shared');
+const { IndexConfig } = require('@adobe/helix-shared-config');
 const fetchAPI = require('@adobe/helix-fetch');
 const { Headers, Response } = require('@adobe/helix-fetch');
 const { wrap } = require('@adobe/openwhisk-action-utils');
