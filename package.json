@@ -33,7 +33,7 @@
   "homepage": "https://github.com/adobe/helix-index-pipelines#readme",
   "dependencies": {
     "@adobe/helix-fetch": "2.2.0",
-    "@adobe/helix-shared-config": "1.0.3",
+    "@adobe/helix-shared-config": "1.0.4",
     "@adobe/helix-status": "9.1.6",
     "@adobe/openwhisk-action-logger": "2.4.4",
     "@adobe/openwhisk-action-utils": "4.4.4",
